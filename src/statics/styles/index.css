@@ -1,0 +1,60 @@
+.under-nav-content {
+  padding-top: 57px;
+  min-height: 100vh;
+}
+
+.ui.header {
+  font-weight: 800;
+  text-shadow: 1px 1px 1px #888;
+}
+.first-page {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: -1;
+  background: linear-gradient(#99999966, #99999966),
+    url('../images/civils.jpg') no-repeat center center fixed;
+  filter: blur(20px);
+  -webkit-filter: blur(20px);
+  opacity: 0.7;
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.no-back .ui.menu {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+.no-back .ui.menu.sidebar {
+  background: white;
+}
+.nav-bar .ui.menu.sidebar {
+  padding: 0;
+}
+
+.persian-input input::placeholder {
+  text-align: right;
+}
+
+.persian-input input {
+  direction: ltr;
+}
+
+.segment-image {
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22);
+}
+
+.rtl-input .ui.input > input,
+.rtl-input .ui.input > textarea {
+  direction: rtl;
+  text-align: right;
+}
