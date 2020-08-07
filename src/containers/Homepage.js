@@ -24,7 +24,7 @@ const Homepage = () => (
       />
       <Button
         as={Link}
-        to="/"
+        to="/game/"
         primary
         size="big"
         style={{ textAlign: 'center', margin: '30px 30%', display: 'block' }}
