@@ -7,8 +7,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        rest.isLoggedIn ? (
-          Component
+        (rest.isLoggedIn && !rest.mentor) || rest.isMentor ? (
+          <Component {...props} {...rest.myProps} />
         ) : (
           <Redirect
             to={{ pathname: '/login', state: { from: props.location } }}
@@ -20,7 +20,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: !!state.account.user,
+  isLoggedIn: !!state.account.token,
+  isMentor: state.account.user && state.account.user.is_mentor,
 });
 
 export default connect(mapStateToProps, {})(PrivateRoute);

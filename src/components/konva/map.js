@@ -38,3 +38,5 @@ const json_map = {
   },
 };
 export default json_map;
+
+// TODO: Delete this file and use redux

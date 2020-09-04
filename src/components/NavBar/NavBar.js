@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Icon, Menu, Sidebar, Responsive, Container } from 'semantic-ui-react';
+import { Icon, Menu, Sidebar, Responsive } from 'semantic-ui-react';
+import NavBarItems from './NavBarItems';
+import { connect } from 'react-redux';
+import {
+  logout,
+  checkPayment,
+  requestMentor,
+} from '../../redux/actions/account';
 
 const NavBarMobile = ({
   children,
@@ -8,23 +15,9 @@ const NavBarMobile = ({
   onToggle,
   rightItems,
   visible,
-}) => (
-  <Sidebar.Pushable>
-    <Sidebar
-      as={Menu}
-      animation="overlay"
-      icon="labeled"
-      vertical
-      visible={visible}
-    >
-      {leftItems}
-    </Sidebar>
-
-    <Sidebar.Pusher
-      dimmed={visible}
-      onClick={onPusherClick}
-      style={{ minHeight: '100vh' }}
-    >
+}) => {
+  const rightMenu = (
+    <>
       <Menu fixed="top" className="borderless">
         <Menu.Item
           onClick={onToggle}
@@ -33,28 +26,49 @@ const NavBarMobile = ({
             paddingRight: '4px',
           }}
         >
-          <Icon name="sidebar" />
+          {leftItems.length > 0 ? <Icon name="sidebar" /> : ''}
         </Menu.Item>
         <Menu.Menu position="right">{rightItems}</Menu.Menu>
       </Menu>
       {children}
-    </Sidebar.Pusher>
-  </Sidebar.Pushable>
-);
+    </>
+  );
+  return leftItems.length > 0 ? (
+    <Sidebar.Pushable>
+      <Sidebar
+        as={Menu}
+        animation="overlay"
+        icon="labeled"
+        vertical
+        visible={visible}
+      >
+        {leftItems}
+      </Sidebar>
+
+      <Sidebar.Pusher
+        dimmed={visible}
+        onClick={onPusherClick}
+        style={{ minHeight: '100vh' }}
+      >
+        {rightMenu}
+      </Sidebar.Pusher>
+    </Sidebar.Pushable>
+  ) : (
+    rightMenu
+  );
+};
 
 const NavBarDesktop = ({ leftItems, rightItems }) => (
   <Menu fixed="top" className="borderless">
-    <Container>
-      {leftItems}
-      <Menu.Menu position="right">{rightItems}</Menu.Menu>
-    </Container>
+    {leftItems}
+    <Menu.Menu position="right">{rightItems}</Menu.Menu>
   </Menu>
 );
 const NavBarChildren = ({ children }) => (
-  <div className="under-nav-content">{children}</div>
+  <div className="under-nav-items">{children}</div>
 );
 
-export default class NavBar extends Component {
+class NavBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,6 +76,23 @@ export default class NavBar extends Component {
     };
     this.handlePusher = this.handlePusher.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll(event) {
+    if (window.scrollY <= 10 && this.state.scrolling === true) {
+      this.setState({ scrolling: false });
+    } else if (window.scrollY > 10 && this.state.scrolling !== true) {
+      this.setState({ scrolling: true });
+    }
   }
 
   handlePusher = () => {
@@ -74,10 +105,16 @@ export default class NavBar extends Component {
 
   render() {
     const { children } = this.props;
-    const { leftItems, rightItems } = this.props.config.items;
+    const { leftItems, rightItems } = NavBarItems(this.props.config, {
+      isLoggedIn: this.props.isLoggedIn,
+      logout: this.props.logout,
+      checkPayment: this.props.checkPayment,
+      requestMentor: this.props.requestMentor,
+      team_uuid: this.props.team_uuid,
+    });
     const { visible } = this.state;
     return (
-      <div className={this.props.config.noBack ? 'no-back nav-bar' : 'nav-bar'}>
+      <div className={'nav ' + (this.state.scrolling ? '' : 'no-scroll')}>
         <Responsive {...Responsive.onlyMobile}>
           <NavBarMobile
             leftItems={leftItems}
@@ -97,3 +134,13 @@ export default class NavBar extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  isLoggedIn: !!state.account.token,
+});
+
+export default connect(mapStateToProps, {
+  logout,
+  checkPayment,
+  requestMentor,
+})(NavBar);

@@ -7,12 +7,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Root from './root/Root';
 import configureStore from './redux/store/configureStore';
 import './statics/styles/index.css';
+import Messages from './Messages';
 
 const store = configureStore();
 
 ReactDOM.render(
   <Router>
     <Provider store={store}>
+      <Messages />
       <Root />
     </Provider>
   </Router>,
