@@ -9,7 +9,7 @@ import {
   Label,
 } from 'semantic-ui-react'
 import Card from '../components/battleElements/Card'
-
+import SpecialCard from '../components/battleElements/SpecialCard'
 
 class BattlePage extends Component {
   render() {
