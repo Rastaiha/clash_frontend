@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import Homepage from '../containers/Homepage';
 import GamePage from '../containers/GamePage';
 
-import '../styles/App.css';
+import '../statics/styles/App.css';
 
 const Root = () => {
   return (

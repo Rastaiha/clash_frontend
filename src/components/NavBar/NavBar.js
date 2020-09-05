@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Menu, Sidebar, Responsive } from 'semantic-ui-react';
 import NavBarItems from './NavBarItems';
 import { connect } from 'react-redux';
-import {
-  logout,
-  checkPayment,
-  requestMentor,
-} from '../../redux/actions/account';
+import { logout } from '../../redux/actions/account';
 
 const NavBarMobile = ({
   children,
@@ -108,9 +104,6 @@ class NavBar extends Component {
     const { leftItems, rightItems } = NavBarItems(this.props.config, {
       isLoggedIn: this.props.isLoggedIn,
       logout: this.props.logout,
-      checkPayment: this.props.checkPayment,
-      requestMentor: this.props.requestMentor,
-      team_uuid: this.props.team_uuid,
     });
     const { visible } = this.state;
     return (
@@ -141,6 +134,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   logout,
-  checkPayment,
-  requestMentor,
 })(NavBar);

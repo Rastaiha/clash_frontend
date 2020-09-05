@@ -1,11 +1,8 @@
 import React from 'react';
-import { Image, Popup, Menu, Button } from 'semantic-ui-react';
-import WhiteboardModal from '../Modals/Whiteboard';
+import { Image, Menu, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import JitsiAudioBtn from './JitsiAudioBtn';
 import JitsiChatBtn from './JitsiChatBtn';
-import getRandomColor from '../../utils/getRandomColor';
-import GradeModal from '../mentor-page/GradeModal';
 
 const leftItems = (config, props) => {
   let items = [];
@@ -108,76 +105,6 @@ const rightItems = (config, props) => {
             ''
           )}
         </Menu.Item>,
-        <>
-          {config.workshopPage ? (
-            <Menu.Item
-              style={{
-                paddingLeft: 0,
-              }}
-            >
-              <WhiteboardModal />
-            </Menu.Item>
-          ) : (
-            ''
-          )}
-        </>,
-        <Menu.Item
-          style={{
-            paddingLeft: 0,
-            paddingRight: 0,
-            marginRight: '3px',
-            marginLeft: '20px',
-          }}
-        >
-          {config.team_members &&
-            config.team_members.map((team_member, i) => (
-              <div key={i} style={{ marginLeft: '-19px' }}>
-                <Popup
-                  inverted
-                  style={popup_style}
-                  key={team_member.uuid}
-                  content={team_member.name}
-                  trigger={
-                    <div
-                      className="userFirstCharName"
-                      style={{ background: getRandomColor() }}
-                    >
-                      {team_member.name[0]}
-                    </div>
-                  }
-                />
-              </div>
-            ))}
-        </Menu.Item>,
-        <>
-          {config.workshopPage ? (
-            <Menu.Item>
-              {config.isMentor ? (
-                <GradeModal
-                  onSubmit={(grade, edge_id) => {
-                    config.submitTeam({
-                      grade,
-                      team_id: config.team_id,
-                      state_id: config.state_id,
-                      edge_id,
-                    });
-                  }}
-                  edges={config.outward_edges}
-                />
-              ) : (
-                <Button
-                  primary
-                  onClick={() => props.requestMentor()}
-                  className="mentorRequest"
-                >
-                  درخواست منتور
-                </Button>
-              )}
-            </Menu.Item>
-          ) : (
-            ''
-          )}
-        </>,
       ];
       break;
     default:

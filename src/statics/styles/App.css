@@ -641,25 +641,6 @@ option {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-.new-server-background {
-  height: 100vh;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: linear-gradient(#feceab33, #feceab33),
-    url('cloud.jpg') no-repeat center center fixed;
-  filter: blur(6px);
-  -webkit-filter: blur(6px);
-  opacity: 0.6;
-
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  z-index: -1;
-  animation: show-back 0.8s 0.3s both;
-}
 
 .new-server-center-items {
   direction: rtl;
