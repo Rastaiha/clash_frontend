@@ -3,6 +3,7 @@ import DevTools from '../containers/DevTools';
 import { Route, Switch } from 'react-router-dom';
 import Homepage from '../containers/Homepage';
 import GamePage from '../containers/GamePage';
+import BattlePage from '../containers/BattlePage'
 
 import '../statics/styles/App.css';
 
@@ -12,6 +13,9 @@ const Root = () => {
       <Switch>
         <Route path="/game/">
           <GamePage />
+        </Route>
+        <Route path="/battle/">
+          <BattlePage />
         </Route>
         <Route path="/">
           <Homepage />
