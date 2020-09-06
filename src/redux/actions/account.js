@@ -9,6 +9,10 @@ export const login = ({ username, password }) => ({
       actionTypes.LOGIN_SUCCESS,
       actionTypes.LOGIN_FAILURE,
     ],
+    payload: {
+      username,
+      password,
+    },
     url: urls.LOGIN,
     fetchOptions: {
       method: 'POST',

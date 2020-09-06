@@ -7,18 +7,66 @@ import {
   Header,
   Divider,
   Label,
+  Input,
+  Button,
 } from 'semantic-ui-react'
 import Card from '../components/battleElements/Card'
-import SpecialCard from '../components/battleElements/SpecialCard'
+import {
+  login,
+  logout,
+} from '../redux/actions/account'
+import {
+  requestFight,
+  move,
+} from '../redux/actions/battle'
 
 class BattlePage extends Component {
+
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: null,
+      opponent: null,
+    }
+    this.request = this.request.bind(this)
+  }
+
+  componentDidMount() {
+    this.props.login({ username: 'mahdi', password: '12345' });
+  }
+
+  request() {
+    this.props.login({ username: this.state.username, password: '12345' });
+    // this.props.move({ x: 101, y: 101 })
+    setTimeout(function () {
+      this.props.requestFight({ username: this.state.opponent })
+    }.bind(this)
+      , 2000)
+  }
+
+
   render() {
+    console.log(this.state.username)
     return (
       <Container text style={{ direction: 'rtl' }}>
         <Grid centered verticalAlign='middle' columns={1}>
           <Grid.Row>
             <Grid.Column textAlign='center' width={16}>
               <Segment>
+                <Input
+                  placeholder='نام کاربری خودت'
+                  onChange={(e) => this.setState({ username: e.target.value })}
+                />
+                <Input
+                  placeholder='نام کاربری رقیب'
+                  onChange={(e) => this.setState({ opponent: e.target.value })}
+                />
+                <Button
+                  onClick={this.request}
+                >
+                  حمله کن
+                </Button>
                 <h1>
                   خون‌آشام‌های کفتارسفت VS بچه‌محل‌ها
                 </h1>
@@ -89,7 +137,14 @@ class BattlePage extends Component {
 }
 
 const mapSateToProps = (state) => ({
-
+  username: state.account.username,
 })
 
-export default connect()(BattlePage)
+export default connect(
+  mapSateToProps,
+  {
+    login,
+    requestFight,
+    move,
+  }
+)(BattlePage)
