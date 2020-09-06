@@ -10,3 +10,6 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 // message
 export const SHIFT_MESSAGE = 'SHIFT_MESSAGE';
 export const SHIFT_REDIRECT = 'SHIFT_REDIRECT';
+
+// map
+export const MOVE_PLAYER = 'MOVE_PLAYER';
