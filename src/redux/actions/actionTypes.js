@@ -23,3 +23,6 @@ export const PUT_CARD_FAILURE‌ = 'PUT_CARD_FAILURE‌';
 export const MOVE_REQUEST = 'MOVE_REQUEST';
 export const MOVE_SUCCESS = 'MOVE_SUCCESS';
 export const MOVE_FAILURE‌ = 'MOVE_FAILURE‌';
+
+// map
+export const MOVE_PLAYER = 'MOVE_PLAYER';
