@@ -10,6 +10,7 @@ export const ROOT = https + baseUrl;
 export const LOGIN = ROOT.concat('authenticate'); //TODO: fix url
 export const LOGOUT = ROOT.concat('auth/logout/'); //TODO: fix url
 
+// fixme what is differnce between put_card and REQUEST_FIGHT
 export const REQUEST_FIGHT = ROOT.concat('api/player/fight');
 export const PUT_CARD = ROOT.concat('api/player/fight');
 export const MOVE = ROOT.concat('api/player/move/');

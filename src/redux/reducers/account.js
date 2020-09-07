@@ -8,6 +8,8 @@ function account(state = initState, action) {
       return initState;
 
     case actionTypes.LOGIN_SUCCESS:
+      localStorage.setItem('token', action.response.token);
+      localStorage.setItem('username', action.payload.username);
       return {
         ...state,
         username: action.payload.username,
