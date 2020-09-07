@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { Group, Layer, Sprite, Stage } from 'react-konva';
+import { Group, Layer, Sprite, Stage, Circle } from 'react-konva';
 import { connect } from 'react-redux';
 import { subscribeToWS } from '../../redux/actions/socketActions';
 import { teamUrl } from '../../redux/actions/urls';
@@ -14,6 +14,7 @@ class GameMap extends Component {
     super(props);
 
     this.getEntitiesInRange = this.getEntitiesInRange.bind(this);
+    this.secondOnKeyEvent = this.secondOnKeyEvent.bind(this);
 
     let widthSize = Math.ceil(window.innerWidth / 100);
     let heightSize = Math.ceil(window.innerHeight / 100);
@@ -26,6 +27,9 @@ class GameMap extends Component {
         y: 100,
       },
 
+      entitiesInMap: [],
+      otherPlayers: [],
+
       canMove: true,
 
       prePosition: {
@@ -35,6 +39,7 @@ class GameMap extends Component {
       preDirection: '',
 
       soldierImage: null,
+      otherPlayersImage: null,
 
       cellWidth: 100,
       cellHeight: 100,
@@ -45,19 +50,65 @@ class GameMap extends Component {
     this.onKeyEvent = this.onKeyEvent.bind(this);
   }
 
+  componentDidUpdate(preProps, preState) {
+    if (preProps.players !== this.props.players) {
+      var changedPlayers = preProps.players.filter((player) => {
+        return this.props.players.indexOf(player) === -1;
+      });
+
+      changedPlayers.forEach((player) => {
+        const curPlayer = _.find(this.props.players, {
+          username: player.username,
+        });
+        this.handleChangedPlayer(player, curPlayer);
+      });
+    }
+  }
+
+  handleChangedPlayer(prePlayer, curPlayer) {
+    let deltaX = curPlayer.x - prePlayer.x;
+    let deltaY = curPlayer.y - prePlayer.y;
+
+    let direction = 'right';
+    if (deltaX === 0) {
+      direction = deltaY > 0 ? 'down' : 'up';
+    } else {
+      direction = deltaX > 0 ? 'right' : 'left';
+    }
+
+    this.state.otherPlayers[prePlayer.username].animation(direction);
+    this.state.otherPlayers[prePlayer.username].start();
+    this.state.otherPlayers[prePlayer.username].to({
+      x:
+        this.state.otherPlayers[prePlayer.username].x() +
+        deltaX * this.state.cellWidth,
+      y:
+        this.state.otherPlayers[prePlayer.username].y() +
+        deltaY * this.state.cellHeight,
+      duration: 0.9,
+    });
+
+    setTimeout(() => {
+      this.state.otherPlayers[prePlayer.username].stop();
+    }, 1000);
+  }
+
   componentDidMount() {
     const image = new Image();
     image.src =
-      process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier6.png';
+      process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png';
     image.onload = () => {
       this.setState({ soldierImage: image });
     };
 
-    subscribeToWS(teamUrl, () => this.handlePlayerLoc);
-  }
+    const image2 = new Image();
+    image2.src =
+      process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier1.png';
+    image2.onload = () => {
+      this.setState({ otherPlayersImage: image2 });
+    };
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
+    subscribeToWS(teamUrl, () => this.handlePlayerLoc);
   }
 
   checkNextPosition(x, y) {
@@ -78,11 +129,15 @@ class GameMap extends Component {
       }
     }
 
+    if (x < 0 || x >= this.props.width || y < 0 || y >= this.props.height) {
+      canMove = false;
+    }
+
     return canMove;
   }
 
   getAnimations() {
-    let height = 32;
+    let height = 31;
     const animations = {
       down: [0, 0, 30, height, 30, 0, 30, height, 30, 0, 30, height],
       left: [
@@ -141,10 +196,128 @@ class GameMap extends Component {
     this.setState({ players: newPlayers });
   };
 
+  secondOnKeyEvent(key, e, startX, startY) {
+    if (this.state.canMove) {
+      let nextX = this.props.user.x;
+      let nextY = this.props.user.y;
+
+      let deltaX = 0;
+      let deltaY = 0;
+
+      switch (key) {
+        case 'right':
+          nextX += 1;
+          deltaX += -1;
+          break;
+        case 'left':
+          nextX -= 1;
+          deltaX = 1;
+          break;
+        case 'up':
+          nextY -= 1;
+          deltaY = 1;
+          break;
+        case 'down':
+          nextY += 1;
+          deltaY = -1;
+          break;
+        // eslint-disable-next-line no-fallthrough
+        default:
+          break;
+      }
+
+      if (this.checkNextPosition(nextX, nextY)) {
+        if (key === 'right' || key === 'left') {
+          if (
+            nextX + Math.ceil(this.state.width / 2) <= this.props.width &&
+            nextX - Math.ceil(this.state.width / 2) >= 0
+          ) {
+            this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
+          } else {
+            this.movePlayer(key, nextX, nextY, startX, startY);
+          }
+        } else {
+          if (
+            nextY + Math.ceil(this.state.height / 2) <= this.props.height &&
+            nextY - Math.ceil(this.state.height / 2) >= 0
+          ) {
+            this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
+          } else {
+            this.movePlayer(key, nextX, nextY, startX, startY);
+          }
+        }
+      }
+    }
+  }
+
+  moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY) {
+    this.setState({
+      canMove: false,
+      imageCounter: this.state.imageCounter + 1,
+      direction: key,
+    });
+
+    const entitiesInMap = this.getEntitiesInRange(startX, startY);
+    this.userSprite.start();
+
+    entitiesInMap.forEach((entity) => {
+      console.log('id:', entity.id);
+      this.moveEntities(
+        entity.id,
+        (entity.x - startX + deltaX) * this.state.cellWidth,
+        (entity.y - startY + deltaY - (entity.height - 1)) * this.state.cellHeight
+      );
+    });
+
+    this.props.players.forEach((player) => {
+      this.moveOtherPlayers(
+        player.username,
+        (player.x - startX + deltaX) * this.state.cellWidth +
+          this.state.cellWidth / 2,
+        (player.y - startY + deltaY) * this.state.cellHeight +
+          this.state.cellHeight / 2
+      );
+    });
+
+    setTimeout(() => {
+      this.userSprite.stop();
+
+      this.props.movePlayer({
+        x: nextX,
+        y: nextY,
+      });
+
+      this.setState({ canMove: true });
+    }, 1000);
+  }
+
+  moveEntities(id, newX, newY) {
+    console.log(
+      'id:',
+      id,
+      this.state.entitiesInMap[id].imageNode.x(),
+      this.state.entitiesInMap[id].imageNode.y(),
+      newX,
+      newY
+    );
+    this.state.entitiesInMap[id].imageNode.to({
+      x: newX,
+      y: newY,
+      duration: 0.9,
+    });
+  }
+
+  moveOtherPlayers(username, newX, newY) {
+    // this.state.otherPlayers[index].start();
+    this.state.otherPlayers[username].to({
+      x: newX,
+      y: newY,
+      duration: 0.9,
+    });
+  }
+
   onKeyEvent(key, e, startX, startY) {
     if (this.state.canMove) {
-      let position = { ...this.state.position };
-
       let nextX = this.props.user.x;
       let nextY = this.props.user.y;
 
@@ -154,15 +327,12 @@ class GameMap extends Component {
           break;
         case 'left':
           nextX -= 1;
-          position.x -= this.state.cellWidth;
           break;
         case 'up':
           nextY -= 1;
-          position.y -= this.state.cellHeight;
           break;
         case 'down':
           nextY += 1;
-          position.y += this.state.cellHeight;
           break;
         // eslint-disable-next-line no-fallthrough
         default:
@@ -170,32 +340,36 @@ class GameMap extends Component {
       }
 
       if (this.checkNextPosition(nextX, nextY)) {
-        this.setState({
-          canMove: false,
-          imageCounter: this.state.imageCounter + 1,
-          direction: key,
-        });
-
-        let preX = this.userSprite.x();
-        let preY = this.userSprite.y();
-
-        this.showAnimation(nextX, nextY, startX, startY);
-
-        setTimeout(() => {
-          this.userSprite.absolutePosition({
-            x: preX,
-            y: preY,
-          });
-          this.userSprite.stop();
-
-          this.props.movePlayer({
-            x: nextX,
-            y: nextY,
-          });
-          this.setState({ canMove: true });
-        }, 1000);
+        this.movePlayer(key, nextX, nextY, startX, startY);
       }
     }
+  }
+
+  movePlayer(key, nextX, nextY, startX, startY) {
+    this.setState({
+      canMove: false,
+      imageCounter: this.state.imageCounter + 1,
+      direction: key,
+    });
+
+    let preX = this.userSprite.x();
+    let preY = this.userSprite.y();
+
+    this.showAnimation(nextX, nextY, startX, startY);
+
+    setTimeout(() => {
+      this.userSprite.absolutePosition({
+        x: preX,
+        y: preY,
+      });
+      this.userSprite.stop();
+
+      this.props.movePlayer({
+        x: nextX,
+        y: nextY,
+      });
+      this.setState({ canMove: true });
+    }, 1000);
   }
 
   showAnimation(nextX, nextY, startX, startY) {
@@ -208,20 +382,23 @@ class GameMap extends Component {
   }
 
   getEntitiesInRange(mapStartX, mapStartY) {
-    const xBound =
+    let xBound =
       mapStartX + this.state.width <= this.props.width
         ? mapStartX + this.state.width
         : this.props.width;
-    const yBound =
+    let yBound =
       mapStartY + this.state.height <= this.props.height
         ? mapStartY + this.state.height
         : this.props.height;
 
+    xBound += 1;
+    yBound += 1;
+
     let newEntities = this.props.mapEntities.filter((entity) => {
       return (
-        mapStartX <= entity.x &&
+        mapStartX - 1 <= entity.x &&
         entity.x < xBound &&
-        mapStartY <= entity.y &&
+        mapStartY - 1 <= entity.y &&
         entity.y < yBound
       );
     });
@@ -269,8 +446,8 @@ class GameMap extends Component {
                       src={
                         process.env.PUBLIC_URL + '/images/sprites/floor2.png'
                       }
-                      width={100}
-                      height={100}
+                      width={this.state.cellWidth}
+                      height={this.state.cellHeight}
                     />
                   </>
                 );
@@ -280,24 +457,22 @@ class GameMap extends Component {
           <Layer ref={(layerEl) => (this.itemsLayer = layerEl)}>
             <Group>
               {newEntities.map((item) => {
+                console.log('size:', item.width, item.height);
                 return (
                   <>
                     <URLImage
+                      ref={(entity) =>
+                        (this.state.entitiesInMap[item.id] = entity)
+                      }
                       x={(item.x - mapStartX) * this.state.cellWidth}
-                      y={(item.y - mapStartY) * this.state.cellHeight}
+                      y={
+                        (item.y - mapStartY) * this.state.cellHeight -
+                        (item.height - 1) * this.state.cellHeight
+                      }
                       src={image_addresses[item.name]}
-                      align="center"
-                      width={this.state.cellWidth}
-                      height={this.state.cellHeight}
+                      width={this.state.cellWidth * item.width}
+                      height={this.state.cellHeight * item.height}
                     />
-
-                    {/* <Image
-                      x={(item.x - mapStartX) * this.state.cellWidth}
-                      y={(item.y - mapStartY) * this.state.cellHeigh}
-                      width={this.state.cellWidth}
-                      height={this.state.cellHeigh}
-                      image={loadedImages[image_addresses[item.name]]}
-                    /> */}
                   </>
                 );
               })}
@@ -308,15 +483,7 @@ class GameMap extends Component {
               {this.props.players.map((player) => {
                 return (
                   <>
-                    {/* <Image
-                      x={(player.x - mapStartX) * this.state.cellWidth}
-                      y={(player.y - mapStartY) * this.state.cellHeigh}
-                      scale={0.5}
-                      image={loadedImages[image_addresses['PLAYER']]}
-                    /> */}
-
-                    <Player
-                      // ref={(otherPlayer) => (this.otherPlayer = otherPlayer)}
+                    <Sprite
                       x={
                         (player.x - mapStartX) * this.state.cellWidth +
                         this.state.cellWidth / 2
@@ -325,30 +492,17 @@ class GameMap extends Component {
                         (player.y - mapStartY) * this.state.cellHeight +
                         this.state.cellHeight / 2
                       }
-                      src={image_addresses['PLAYER']}
-                      scale={{
-                        x: 1,
-                        y: 1,
-                      }}
-                      onClick={this.onPlayerClick}
+                      ref={(sprite) =>
+                        (this.state.otherPlayers[player.username] = sprite)
+                      }
+                      image={this.state.otherPlayersImage}
+                      animation={'down'}
+                      animations={this.getAnimations()}
+                      frameRate={5}
                     />
-
-                    {/* <URLImage
-                      x={(player.x - mapStartX) * this.state.cellWidth}
-                      y={(player.y - mapStartY) * this.state.cellHeigh}
-                      src={image_addresses['PLAYER']}
-                      scale={0.5}
-                    /> */}
                   </>
                 );
               })}
-
-              {/* <URLImage
-                x={(this.props.user.x - mapStartX) * this.state.cellWidth}
-                y={(this.props.user.y - mapStartY) * this.state.cellHeigh}
-                src={image_addresses['PLAYER']}
-                scale={0.5}
-              /> */}
 
               <Sprite
                 x={
@@ -371,7 +525,7 @@ class GameMap extends Component {
         <KeyboardEventHandler
           handleKeys={['left', 'down', 'right', 'up']}
           onKeyEvent={(key, e) => {
-            this.onKeyEvent(key, e, mapStartX, mapStartY);
+            this.secondOnKeyEvent(key, e, mapStartX, mapStartY);
           }}
         />
       </>

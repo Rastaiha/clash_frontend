@@ -8,3 +8,8 @@ export const movePlayer = (newPosition) => ({
   type: actionTypes.MOVE_PLAYER,
   payload: {newPosition}
 })
+
+export const updatePlayer = (username, newPosition) => ({
+  type: actionTypes.UPDATE_OTHER_PLAYERS,
+  payload: {username, newPosition}
+})

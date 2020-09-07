@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^7.1.2",
     "konva": "^7.0.2",
     "lodash": "^4.17.20",
+    "perf_hooks": "0.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -22,8 +23,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "semantic-ui-css": "^2.4.1",
-    "sockjs-client": "^1.5.0",
-    "semantic-ui-react": "^1.0.0"
+    "semantic-ui-react": "^1.0.0",
+    "sockjs-client": "^1.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
