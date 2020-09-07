@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import Homepage from '../containers/Homepage';
 import GamePage from '../containers/GamePage';
 import BattlePage from '../containers/BattlePage'
-import CivilizationPage from '../containers/CivilizationPage'
+import Inventory from '../containers/Inventory'
 
 import '../statics/styles/App.css';
 
@@ -19,7 +19,7 @@ const Root = () => {
           <BattlePage />
         </Route>
         <Route path="/civilization/">
-          <CivilizationPage />
+          <Inventory />
         </Route>
         <Route path="/">
           <Homepage />

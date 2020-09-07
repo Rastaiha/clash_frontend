@@ -33,14 +33,14 @@ class GamePage extends Component {
   render() {
     return (
       // this.state.finishedLoad && (
-        <GameMap
-          movePlayer={this.props.movePlayer}
-          mapEntities={this.props.map.mapEntities}
-          players={this.props.players}
-          width={this.props.map.width}
-          height={this.props.map.height}
-          user={this.props.user}
-        />
+      <GameMap
+        movePlayer={this.props.movePlayer}
+        mapEntities={this.props.map.mapEntities}
+        players={this.props.players}
+        width={this.props.map.width}
+        height={this.props.map.height}
+        user={this.props.user}
+      />
       // )
     );
   }

@@ -1,6 +1,6 @@
 import * as actionTypes from '../actions/actionTypes';
 
-const initState = { token: null, username: null };
+const initState = { token: null, username: null, deck: [] };
 
 function account(state = initState, action) {
   switch (action.type) {
@@ -12,6 +12,12 @@ function account(state = initState, action) {
         ...state,
         username: action.payload.username,
         token: action.response.token,
+      };
+    case actionTypes.PLAYER_CARD_SUCCESS:
+      return {
+        ...state,
+        deck: action.payload.data,
+          
       };
 
     default:
