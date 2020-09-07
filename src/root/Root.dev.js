@@ -3,8 +3,9 @@ import DevTools from '../containers/DevTools';
 import { Route, Switch } from 'react-router-dom';
 import Homepage from '../containers/Homepage';
 import GamePage from '../containers/GamePage';
-import BattlePage from '../containers/BattlePage'
-import Inventory from '../containers/Inventory'
+import BattlePage from '../containers/BattlePage';
+import Inventory from '../containers/Inventory';
+import Login from '../containers/Login';
 
 import '../statics/styles/App.css';
 
@@ -12,18 +13,11 @@ const Root = () => {
   return (
     <>
       <Switch>
-        <Route path="/game/">
-          <GamePage />
-        </Route>
-        <Route path="/battle/">
-          <BattlePage />
-        </Route>
-        <Route path="/civilization/">
-          <Inventory />
-        </Route>
-        <Route path="/">
-          <Homepage />
-        </Route>
+        <Route path="/login" component={Login} />
+        <Route path="/game" component={GamePage} />
+        <Route path="/battle" component={BattlePage} />
+        <Route path="/civilization" component={Inventory} />
+        <Route path="/" component={Homepage} />
       </Switch>
       <DevTools />
     </>

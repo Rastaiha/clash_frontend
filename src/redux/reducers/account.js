@@ -17,7 +17,6 @@ function account(state = initState, action) {
       return {
         ...state,
         deck: action.payload.data,
-          
       };
 
     default:

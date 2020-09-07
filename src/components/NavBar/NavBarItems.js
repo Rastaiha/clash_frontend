@@ -14,35 +14,10 @@ const leftItems = (config, props) => {
             <Button basic onClick={props.logout}>
               خروج
             </Button>
-          </Menu.Item>,
-          <Menu.Item name="resetPassword">
-            <Button basic as={Link} to="/resetPassword">
-              تغییر رمز
-            </Button>
-          </Menu.Item>,
-          <Menu.Item>
-            <Button
-              as="a"
-              target="blank"
-              href="https://docs.google.com/forms/d/e/1FAIpQLSfhh5HaHXPsXp6BXNSHUAKO12qpHVGUg8OQlOTfLHKO_nUjOg/viewform?usp=sf_link"
-              positive
-            >
-              شرکت در نظرسنجی
-            </Button>
-          </Menu.Item>,
-          <Menu.Item>
-            <Button as={Link} to="/selectWorkshop" primary>
-              ورود به رویداد
-            </Button>
           </Menu.Item>
         );
       } else {
         items.push(
-          <Menu.Item>
-            <Button as={Link} to="/login" positive>
-              شرکت در نظرسنجی
-            </Button>
-          </Menu.Item>,
           <Menu.Item name="login">
             <Button as={Link} to="/login" primary>
               ورود
