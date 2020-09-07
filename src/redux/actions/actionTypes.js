@@ -41,7 +41,7 @@ export const CIVIL_CARD_REQUEST = 'CIVIL_CARD_REQUEST';
 export const CIVIL_CARD_SUCCESS = 'CIVIL_CARD_SUCCESS';
 export const CIVIL_CARD_FAILURE = 'CIVIL_CARD_FAILURE‌';
 
-
+// no need to do any thing we make another request after these ones
 export const BUY_CARD_REQUEST = 'BUY_CARD_REQUEST';
 export const BUY_CARD_SUCCESS = 'BUY_CARD_SUCCESS';
 export const Buy_CARD_FAILURE = 'Buy_CARD_FAILURE';
@@ -58,7 +58,3 @@ export const discard_CARD_FAILURE = 'discard_CARD_FAILURE';
 export const pickup_CARD_REQUEST = 'pickup_CARD_REQUEST';
 export const pickup_CARD_SUCCESS = 'pickup_CARD_SUCCESS';
 export const pickup_CARD_FAILURE = 'pickup_CARD_FAILURE';
-
-export const MAPDATA_REQUEST = 'MAPDATA_REQUEST';
-export const MAPDATA_SUCCESS = 'MAPDATA_SUCCESS';
-export const MAPDATA_FAILURE = 'MAPDATA_FAILURE';

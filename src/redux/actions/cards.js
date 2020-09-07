@@ -12,7 +12,7 @@ export const getCardTypes = () => ({
     payload: {
       
     },
-    url: urls.cardUrl,
+    url: urls.cardTypeUrl,
     fetchOptions: {
       method: 'GET',
       body: JSON.stringify(),

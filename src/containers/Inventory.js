@@ -17,16 +17,16 @@ import SpecialCard from '../components/battleElements/SpecialCard'
 
 class Inventory extends Component {
 
-  componentDidMount() {
-    this.props.getCardTypes();
-    this.props.getCivilCards();
-    this.props.playerCard();
-  }
-
   getData = () => {
     this.props.getCivilCards();
     this.props.playerCard();
   };
+
+  componentDidMount() {
+    this.props.getCardTypes();
+    this.getData();
+  }
+
 pickup = async (cardId) => {
   await this.props.pickupCard(cardId);
   this.getData();
