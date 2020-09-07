@@ -11,13 +11,12 @@ import {
 import BattlePage from './BattlePage';
 import GamePage from './GamePage';
 import Inventory from './Inventory';
-import { initWebsocket, subscribeToWS } from './redux/actions/socketActions';
 
 
 class CivilizationPage extends Component {
 
   componentDidMount() {
-    initWebsocket();
+    
   }
 
   render() {
