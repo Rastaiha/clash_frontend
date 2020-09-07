@@ -4,7 +4,7 @@ import GameMap from '../components/konva/GameMap';
 import imageNames from '../components/konva/imageNames';
 import loadedImages from '../components/konva/loadedImages';
 import { movePlayer } from '../redux/actions/map';
-import { Icon } from 'semantic-ui-react';
+import GameNav from '../components/GameNav/GameNav';
 
 class GamePage extends Component {
   constructor(props) {
@@ -13,15 +13,18 @@ class GamePage extends Component {
       finishedLoad: false,
     };
   }
-
+  loadedImagesCount = 0;
   preloadImages() {
     imageNames.forEach((name) => {
       loadedImages[name] = new Image();
+      loadedImages[name].onload = () => {
+        this.loadedImagesCount++;
+        if (this.loadedImagesCount >= imageNames.length) {
+          this.setState({ finishedLoad: true });
+        }
+      };
       loadedImages[name].src = name;
-      console.log('loaded images:', loadedImages, name, loadedImages[name]);
     });
-
-    this.setState({ finishedLoad: true });
   }
 
   componentDidMount() {
@@ -31,13 +34,7 @@ class GamePage extends Component {
   render() {
     return (
       <div style={{ position: 'relative' }}>
-        <div className="game-nav">
-          <div className="game-nav-container">
-            <div>
-              <Icon name="alarm" />
-            </div>
-          </div>
-        </div>
+        <GameNav />
         <GameMap
           movePlayer={this.props.movePlayer}
           mapEntities={this.props.map.mapEntities}
