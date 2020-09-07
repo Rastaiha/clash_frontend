@@ -8,6 +8,7 @@ import { teamUrl } from '../../redux/actions/urls';
 import image_addresses from './images_src';
 import Player from './Player';
 import URLImage from './URLImage';
+import {animations} from './animationsUtills';
 
 class GameMap extends Component {
   constructor(props) {
@@ -136,62 +137,15 @@ class GameMap extends Component {
     return canMove;
   }
 
-  getAnimations() {
-    let height = 31;
-    const animations = {
-      down: [0, 0, 30, height, 30, 0, 30, height, 30, 0, 30, height],
-      left: [
-        0,
-        height * 1,
-        30,
-        height,
-        30,
-        height * 1,
-        30,
-        height,
-        30,
-        height * 1,
-        30,
-        height,
-      ],
-      right: [
-        0,
-        height * 2,
-        30,
-        height,
-        30,
-        height * 2,
-        30,
-        height,
-        30,
-        height * 2,
-        30,
-        height,
-      ],
-      up: [
-        0,
-        height * 3,
-        30,
-        height,
-        30,
-        height * 3,
-        30,
-        height,
-        30,
-        height * 3,
-        30,
-        height,
-      ],
-    };
-    return animations;
-  }
+
 
   handlePlayerLoc = (newPlayer) => {
     console.log(newPlayer);
     const { players } = this.state;
     let newPlayers = [newPlayer];
     players.forEach((player) => {
-      if (player.playerName !== newPlayer.playerName) newPlayers.push(player);
+      if (player.playerName !== newPlayer.playerName)
+        newPlayers.push(player);
     });
     this.setState({ players: newPlayers });
   };
@@ -497,7 +451,7 @@ class GameMap extends Component {
                       }
                       image={this.state.otherPlayersImage}
                       animation={'down'}
-                      animations={this.getAnimations()}
+                      animations={animations}
                       frameRate={5}
                     />
                   </>
@@ -516,7 +470,7 @@ class GameMap extends Component {
                 ref={(userSprite) => (this.userSprite = userSprite)}
                 image={this.state.soldierImage}
                 animation={this.state.direction}
-                animations={this.getAnimations()}
+                animations={animations}
                 frameRate={5}
               />
             </Group>
