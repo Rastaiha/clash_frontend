@@ -56,7 +56,7 @@ const initState = {
     {
       username: 'player3',
       x: 18,
-      y: 11,
+      y: 12,
     },
     {
       username: 'player4',

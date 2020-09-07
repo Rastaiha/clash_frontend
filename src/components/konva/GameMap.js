@@ -1,27 +1,24 @@
-import KeyboardEventHandler from 'react-keyboard-event-handler';
-import React, { Component } from 'react';
-import { Layer, Rect, Stage, Group, Image } from 'react-konva';
-import Moveable from './Moveable';
-import { playerImages } from './constants';
-import URLImage from './URLImage';
-import json_map from './map';
-import image_addresses from './images_src';
-import loadedImages from './loadedImages';
-import { ensureDirectoryExists } from 'jest-snapshot/build/utils';
 import _ from 'lodash';
+import React, { Component } from 'react';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
+import { Group, Layer, Stage, Sprite } from 'react-konva';
+import { playerImages } from './constants';
+import image_addresses from './images_src';
+import Moveable from './Moveable';
+import Player from './Player';
+import URLImage from './URLImage';
 
 export default class GameMap extends Component {
   constructor(props) {
     super(props);
 
     this.getEntitiesInRange = this.getEntitiesInRange.bind(this);
-    this.changeUserPosition = this.changeUserPosition.bind(this);
 
     let widthSize = Math.ceil(window.innerWidth / 100);
     let heightSize = Math.ceil(window.innerHeight / 100);
 
     this.state = {
-      direction: 'right',
+      direction: 'down',
       imageCounter: 0,
       position: {
         x: 100,
@@ -36,8 +33,10 @@ export default class GameMap extends Component {
       },
       preDirection: '',
 
+      soldierImage: null,
+
       cellWidth: 100,
-      cellHeigh: 100,
+      cellHeight: 100,
       width: widthSize,
       height: heightSize,
     };
@@ -46,17 +45,17 @@ export default class GameMap extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.enableMoving(), 1000);
+
+    const image = new Image();
+    image.src =
+      process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier6.png';
+    image.onload = () => {
+      this.setState({ soldierImage: image });
+    };
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
-  }
-
-  enableMoving() {
-    if (!this.state.canMove) {
-      this.setState({ canMove: true });
-    }
   }
 
   checkNextPosition(x, y) {
@@ -80,9 +79,58 @@ export default class GameMap extends Component {
     return canMove;
   }
 
-  onKeyEvent(key, e) {
+  getAnimations() {
+    let height = 32;
+    const animations = {
+      down: [0, 0, 30, height, 30, 0, 30, height, 30, 0, 30, height],
+      left: [
+        0,
+        height * 1,
+        30,
+        height,
+        30,
+        height * 1,
+        30,
+        height,
+        30,
+        height * 1,
+        30,
+        height,
+      ],
+      right: [
+        0,
+        height * 2,
+        30,
+        height,
+        30,
+        height * 2,
+        30,
+        height,
+        30,
+        height * 2,
+        30,
+        height,
+      ],
+      up: [
+        0,
+        height * 3,
+        30,
+        height,
+        30,
+        height * 3,
+        30,
+        height,
+        30,
+        height * 3,
+        30,
+        height,
+      ],
+    };
+    return animations;
+  }
+
+  onKeyEvent(key, e, startX, startY) {
     if (this.state.canMove) {
-      // let canMove = this.checkNextPosition()
       let position = { ...this.state.position };
 
       let nextX = this.props.user.x;
@@ -91,23 +139,18 @@ export default class GameMap extends Component {
       switch (key) {
         case 'right':
           nextX += 1;
-          // position.x += this.state.cellWidth;
-          this.setState({ direction: key, position });
           break;
         case 'left':
           nextX -= 1;
           position.x -= this.state.cellWidth;
-          this.setState({ direction: key, position });
           break;
         case 'up':
           nextY -= 1;
-          position.y -= this.state.cellHeigh;
-          this.setState({ direction: key, position });
+          position.y -= this.state.cellHeight;
           break;
         case 'down':
           nextY += 1;
-          position.y += this.state.cellHeigh;
-          this.setState({ direction: key, position });
+          position.y += this.state.cellHeight;
           break;
         // eslint-disable-next-line no-fallthrough
         default:
@@ -115,39 +158,42 @@ export default class GameMap extends Component {
       }
 
       if (this.checkNextPosition(nextX, nextY)) {
-        this.setState({ canMove: false, imageCounter: this.state.imageCounter + 1 });
-        this.props.movePlayer({
-          x: nextX,
-          y: nextY,
+        this.setState({
+          canMove: false,
+          imageCounter: this.state.imageCounter + 1,
+          direction: key,
         });
+
+        let preX = this.userSprite.x();
+        let preY = this.userSprite.y();
+
+        this.showAnimation(nextX, nextY, startX, startY);
+
+        setTimeout(() => {
+          this.userSprite.absolutePosition({
+            x: preX,
+            y: preY,
+          });
+          this.userSprite.stop();
+
+          this.props.movePlayer({
+            x: nextX,
+            y: nextY,
+          });
+          this.setState({canMove: true})
+        }, 1000);
+        
       }
     }
   }
 
-  changeUserPosition(e, startX, startY) {
-    let x = e.target.attrs.x / this.state.cellWidth + startX;
-    let y = e.target.attrs.y / this.state.cellHeigh + startY;
-
-    if (!(x === this.props.user.x && y === this.props.user.y)) {
-      if (0 <= x && x < this.props.width && 0 <= y && y < this.props.height) {
-        let direction = '';
-        if (x < this.props.user.x) {
-          direction = 'left';
-        } else if (x > this.props.user.x) {
-          direction = 'right';
-        } else if (y < this.props.user.y) {
-          direction = 'up';
-        } else if (y > this.props.user.y) {
-          direction = 'down';
-        }
-        this.setState({ direction });
-
-        this.props.movePlayer({
-          x,
-          y,
-        });
-      }
-    }
+  showAnimation(nextX, nextY, startX, startY) {
+    this.userSprite.start();
+    this.userSprite.to({
+      x: (nextX - startX) * this.state.cellWidth + this.state.cellWidth / 2,
+      y: (nextY - startY) * this.state.cellHeight + this.state.cellHeight / 2,
+      duration: 0.9,
+    });
   }
 
   getEntitiesInRange(mapStartX, mapStartY) {
@@ -193,7 +239,6 @@ export default class GameMap extends Component {
     }
 
     let newEntities = this.getEntitiesInRange(mapStartX, mapStartY);
-    // console.log('in renderrrr');
 
     return (
       <>
@@ -201,19 +246,10 @@ export default class GameMap extends Component {
           width={window.innerWidth}
           height={window.innerHeight}
           ref={(stageEl) => (this.stageEl = stageEl)}
-          // onMouseDown={this.deselectAllOnTouchStage}
-          // onTouchStart={this.deselectAllOnTouchStage}
         >
           <Layer ref={(layerEl) => (this.backgroundLayer = layerEl)}>
             <Group>
               {[...Array(600)].map((e, i) => {
-                // console.log(
-                //   '??',
-                //   loadedImages[
-                //     process.env.PUBLIC_URL + '/images/sprites/floor2.png'
-                //   ]
-                // );
-
                 return (
                   <>
                     <URLImage
@@ -225,18 +261,6 @@ export default class GameMap extends Component {
                       width={100}
                       height={100}
                     />
-
-                    {/* <Image
-                      x={(i % 15) * 100}
-                      y={parseInt(i / 15) * 100 - 300}
-                      image={
-                        loadedImages[
-                          process.env.PUBLIC_URL + '/images/sprites/floor2.png'
-                        ]
-                      }
-                      width={100}
-                      height={100}
-                    /> */}
                   </>
                 );
               })}
@@ -245,20 +269,15 @@ export default class GameMap extends Component {
           <Layer ref={(layerEl) => (this.itemsLayer = layerEl)}>
             <Group>
               {newEntities.map((item) => {
-                // console.log(
-                //   'imageeeee:',
-                //   item.name,
-                //   image_addresses[item.name],
-                //   loadedImages[image_addresses[item.name]]
-                // );
                 return (
                   <>
                     <URLImage
                       x={(item.x - mapStartX) * this.state.cellWidth}
-                      y={(item.y - mapStartY) * this.state.cellHeigh}
+                      y={(item.y - mapStartY) * this.state.cellHeight}
                       src={image_addresses[item.name]}
+                      align="center"
                       width={this.state.cellWidth}
-                      height={this.state.cellHeigh}
+                      height={this.state.cellHeight}
                     />
 
                     {/* <Image
@@ -285,12 +304,30 @@ export default class GameMap extends Component {
                       image={loadedImages[image_addresses['PLAYER']]}
                     /> */}
 
-                    <URLImage
+                    <Player
+                      // ref={(otherPlayer) => (this.otherPlayer = otherPlayer)}
+                      x={
+                        (player.x - mapStartX) * this.state.cellWidth +
+                        this.state.cellWidth / 2
+                      }
+                      y={
+                        (player.y - mapStartY) * this.state.cellHeight +
+                        this.state.cellHeight / 2
+                      }
+                      src={image_addresses['PLAYER']}
+                      scale={{
+                        x: 1,
+                        y: 1,
+                      }}
+                      onClick={this.onPlayerClick}
+                    />
+
+                    {/* <URLImage
                       x={(player.x - mapStartX) * this.state.cellWidth}
                       y={(player.y - mapStartY) * this.state.cellHeigh}
                       src={image_addresses['PLAYER']}
                       scale={0.5}
-                    />
+                    /> */}
                   </>
                 );
               })}
@@ -302,20 +339,29 @@ export default class GameMap extends Component {
                 scale={0.5}
               /> */}
 
-              <Moveable
-                images={playerImages}
-                direction={this.state.direction}
-                x={(this.props.user.x - mapStartX) * this.state.cellWidth}
-                y={(this.props.user.y - mapStartY) * this.state.cellHeigh}
-                // imageCounter={this.imageCounter++}
-                imageCounter={this.state.imageCounter}
+              <Sprite
+                x={
+                  (this.props.user.x - mapStartX) * this.state.cellWidth +
+                  this.state.cellWidth / 2
+                }
+                y={
+                  (this.props.user.y - mapStartY) * this.state.cellHeight +
+                  this.state.cellHeight / 2
+                }
+                ref={(userSprite) => (this.userSprite = userSprite)}
+                image={this.state.soldierImage}
+                animation={this.state.direction}
+                animations={this.getAnimations()}
+                frameRate={5}
               />
             </Group>
           </Layer>
         </Stage>
         <KeyboardEventHandler
           handleKeys={['left', 'down', 'right', 'up']}
-          onKeyEvent={this.onKeyEvent}
+          onKeyEvent={(key, e) => {
+            this.onKeyEvent(key, e, mapStartX, mapStartY);
+          }}
         />
       </>
     );

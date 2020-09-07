@@ -15,6 +15,7 @@ export default class Moveable extends Component {
     const { images, direction, x, y } = this.props;
     return (
       <URLImage
+        ref={(moveable) => (this.moveable = moveable)}
         src={
           images[direction][this.props.imageCounter % images[direction].length]
         }
