@@ -3,8 +3,8 @@ import DevTools from '../containers/DevTools';
 import { Route, Switch } from 'react-router-dom';
 import Homepage from '../containers/Homepage';
 import GamePage from '../containers/GamePage';
-import BattlePage from '../containers/BattlePage'
-import Inventory from '../containers/Inventory'
+import BattlePage from '../containers/BattlePage';
+import Inventory from '../containers/Inventory';
 
 import '../statics/styles/App.css';
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   Container,
@@ -9,32 +9,22 @@ import {
   Label,
   Input,
   Button,
-} from 'semantic-ui-react'
-import Card from '../components/battleElements/Card'
-import {
-  login,
-  logout,
-} from '../redux/actions/account'
-import {
-  requestFight,
-  move,
-} from '../redux/actions/battle'
-import {wsQueueFightUrl} from '../redux/actions/urls';
+} from 'semantic-ui-react';
+import Card from '../components/battleElements/Card';
+import { login, logout } from '../redux/actions/account';
+import { requestFight, move } from '../redux/actions/battle';
+import { wsQueueFightUrl } from '../redux/actions/urls';
 import { subscribeToWS } from '../redux/actions/socketActions';
 
-
 class BattlePage extends Component {
-
-
   constructor(props) {
     super(props);
     this.state = {
       username: null,
       opponent: null,
-    }
-    this.request = this.request.bind(this)
-    this.handleFightMsg = this.handleFightMsg.bind(this)
-    
+    };
+    this.request = this.request.bind(this);
+    // this.handleFightMsg = this.handleFightMsg.bind(this)
   }
 
   componentDidMount() {
@@ -68,37 +58,32 @@ class BattlePage extends Component {
   request() {
     this.props.login({ username: this.state.username, password: '12345' });
     // this.props.move({ x: 101, y: 101 })
-    setTimeout(function () {
-      this.props.requestFight({ username: this.state.opponent })
-    }.bind(this)
-    , 2000);
+    setTimeout(
+      function () {
+        this.props.requestFight({ username: this.state.opponent });
+      }.bind(this),
+      2000
+    );
   }
 
-
   render() {
-    console.log(this.state.username)
+    console.log(this.state.username);
     return (
-      <Container text style={{ direction: 'rtl' }}>
-        <Grid centered verticalAlign='middle' columns={1}>
+      <Container className="battle-page" text style={{ direction: 'rtl' }}>
+        <Grid centered verticalAlign="middle" columns={1}>
           <Grid.Row>
-            <Grid.Column textAlign='center' width={16}>
+            <Grid.Column textAlign="center" width={16}>
               <Segment>
                 <Input
-                  placeholder='نام کاربری خودت'
+                  placeholder="نام کاربری خودت"
                   onChange={(e) => this.setState({ username: e.target.value })}
                 />
                 <Input
-                  placeholder='نام کاربری رقیب'
+                  placeholder="نام کاربری رقیب"
                   onChange={(e) => this.setState({ opponent: e.target.value })}
                 />
-                <Button
-                  onClick={this.request}
-                >
-                  حمله کن
-                </Button>
-                <h1>
-                  خون‌آشام‌های کفتارسفت VS بچه‌محل‌ها
-                </h1>
+                <Button onClick={this.request}>حمله کن</Button>
+                <h1>خون‌آشام‌های کفتارسفت VS بچه‌محل‌ها</h1>
                 <br />
                 <div
                   style={{
@@ -108,7 +93,7 @@ class BattlePage extends Component {
                   <div
                     style={{
                       display: 'flex',
-                      width: '70%'
+                      width: '70%',
                     }}
                   >
                     <Card />
@@ -121,13 +106,10 @@ class BattlePage extends Component {
                     style={{
                       width: '30%',
                     }}
-                  >
-
-                  </div>
-
+                  ></div>
                 </div>
                 <Divider horizontal>
-                  <Label circular size='massive' fixed>
+                  <Label circular size="massive" fixed>
                     تایمر
                   </Label>
                 </Divider>
@@ -140,12 +122,11 @@ class BattlePage extends Component {
                     style={{
                       width: '30%',
                     }}
-                  >
-                  </div>
+                  ></div>
                   <div
                     style={{
                       display: 'flex',
-                      width: '70%'
+                      width: '70%',
                     }}
                   >
                     <Card />
@@ -159,21 +140,17 @@ class BattlePage extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Container >
-    )
+      </Container>
+    );
   }
-
 }
 
 const mapSateToProps = (state) => ({
   username: state.account.username,
-})
+});
 
-export default connect(
-  mapSateToProps,
-  {
-    login,
-    requestFight,
-    move,
-  }
-)(BattlePage)
+export default connect(mapSateToProps, {
+  login,
+  requestFight,
+  move,
+})(BattlePage);
