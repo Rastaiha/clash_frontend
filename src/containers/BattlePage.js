@@ -18,6 +18,7 @@ import {
 import {
   requestFight,
   move,
+  newDeck,
 } from '../redux/actions/battle'
 import {wsQueueFightUrl} from '../redux/actions/urls';
 import { subscribeToWS } from '../redux/actions/socketActions';
@@ -31,6 +32,9 @@ class BattlePage extends Component {
     this.state = {
       username: null,
       opponent: null,
+      running: false,
+      message: '',
+      results: [],
     }
     this.request = this.request.bind(this)
     this.handleFightMsg = this.handleFightMsg.bind(this)
@@ -39,31 +43,30 @@ class BattlePage extends Component {
 
   componentDidMount() {
     this.props.login({ username: 'mahdi', password: '12345' });
-    // fixme state
-    // subscribeToWS(state, wsQueueFightUrl,  this.handleFightMsg);
+    
+    subscribeToWS( wsQueueFightUrl,  this.handleFightMsg);
   }
 
-  // handleFightMsg({ host, guest, remained, message, fightRounds })  {
-  //   if (host) {
-  //     setRunning(true);
-  //     setOpponent(host.username === username ? guest : host);
-  //   } else if (remained)
-  //     setMessage(`${message} | ${remained}`);
-  //   else if (fightRounds) {
-  //     let newDeck = deck.map(card =>
-  //       fightRounds.some(({ winnerCard, loserCard }) =>
-  //         winnerCard.id === card.id || loserCard.id === card.id)
-  //         ? { ...card, used: true }
-  //         : { ...card, used: false }
-  //     );
-  //     setDeck(newDeck);
-  //     setResults(fightRounds);
-  //   }
-  //   else {
-  //     setMessage(message);
-  //     setInterval(() => setRunning(false), 1500);
-  //   }
-  // }
+  handleFightMsg({ host, guest, remained, message, fightRounds })  {
+    if (host) {
+      this.setState({running: true, opponent:host.username === this.state.username ? guest : host });
+    } else if (remained)
+      this.setState({message: `${message} | ${remained}`});
+    else if (fightRounds) {
+      let newDeck = this.props.deck.map(card =>
+        fightRounds.some(({ winnerCard, loserCard }) =>
+          winnerCard.id === card.id || loserCard.id === card.id)
+          ? { ...card, used: true }
+          : { ...card, used: false }
+      );
+      this.props.newDeck(newDeck);
+      this.setState({results: fightRounds});
+    }
+    else {
+      this.setState({message});
+      setInterval(() => this.setState({running: false}), 1500);
+    }
+  }
 
   request() {
     this.props.login({ username: this.state.username, password: '12345' });
@@ -175,5 +178,6 @@ export default connect(
     login,
     requestFight,
     move,
+    newDeck,
   }
-)(BattlePage)
+)(BattlePage);

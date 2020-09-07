@@ -54,11 +54,62 @@ export const playerCard = () => ({
   },
 });
 
-
-// fixme
-export const buyCard = () => ({
-
+export const buyCard = (cardId) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.BUY_CARD_REQUEST,
+      actionTypes.BUY_CARD_SUCCESS,
+      actionTypes.Buy_CARD_FAILURE,
+    ],
+    url: urls.BUY_CARD(cardId),
+    fetchOptions: {
+      method: 'POST',
+      dontContentType: false,
+    },
+  },
 });
-export const sellCard = () => ({});
-export const discardCard = () => ({});
-export const pickupCard = () => ({});
+
+export const sellCard = (cardId) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.SELL_CARD_REQUEST,
+      actionTypes.SELL_CARD_SUCCESS,
+      actionTypes.SELL_CARD_FAILURE,
+    ],
+    url: urls.SELL_CARD(cardId),
+    fetchOptions: {
+      method: 'POST',
+      dontContentType: false,
+    },
+  },
+});
+
+export const discardCard = (cardId) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.discard_CARD_REQUEST,
+      actionTypes.discard_CARD_SUCCESS,
+      actionTypes.discard_CARD_FAILURE,
+    ],
+    url: urls.discard_Card(cardId),
+    fetchOptions: {
+      method: 'POST',
+      dontContentType: false,
+    },
+  },
+});
+
+export const pickupCard = (cardId) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.pickup_CARD_REQUEST,
+      actionTypes.pickup_CARD_SUCCESS,
+      actionTypes.pickup_CARD_FAILURE,
+    ],
+    url: urls.pickup_Card(cardId),
+    fetchOptions: {
+      method: 'POST',
+      dontContentType: false,
+    },
+  },
+});

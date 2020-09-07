@@ -1,20 +1,26 @@
 
 import * as actionTypes from './actionTypes'
-import {mapDataUrl, defaultUrl, fight} from './urls';
+import { CALL_API } from '../middleware/api/api';
+import * as urls from './urls';
+
 
 export const movePlayer = (newPosition) => ({
   type: actionTypes.MOVE_PLAYER,
   payload: {newPosition}
 })
 
-// fixme
-export async function getMapDate() {
-  // const res = await axios.get(mapDataUrl, {
-  //   headers: {
-  //     Authorization: 'Bearer ' + localStorage.getItem('token')
-  //   }
-  // });
-      
-  // if (res.status === 200)
-  //   return { ...res.data };
-}
+
+export const getCardTypes = () => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.MAPDATA_REQUEST,
+      actionTypes.MAPDATA_SUCCESS,
+      actionTypes.MOVE_FAILURE,
+    ],
+    url: urls.cardUrl,
+    fetchOptions: {
+      method: 'GET',
+      body: JSON.stringify(),
+    },
+  },
+});

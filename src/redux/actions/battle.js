@@ -47,3 +47,11 @@ export const move = ({ x, y }) => ({
     },
   },
 });
+
+export const newDeck = (newDeck) => ({
+  type: actionTypes.new_Deck,
+  action: {
+    data: newDeck
+  },
+});
+

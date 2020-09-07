@@ -26,7 +26,7 @@ export const cardTypeUrl = ROOT.concat('/api/armory/cardtype');
 export const civilCardUrl = '/api/civilization/card';
 
 
-export const pickup = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/pickup`;
-export const discard = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/discard`;
-export const sell = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/sell`;
-export const BUY_CARD‌ = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/buy`;
+export const pickup_Card = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/pickup`;
+export const discard_Card = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/discard`;
+export const SELL_CARD = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/sell`;
+export const BUY_CARD = (cardId) => `${defaultUrl}/api/armory/card/${cardId}/buy`;

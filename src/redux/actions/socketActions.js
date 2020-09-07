@@ -2,6 +2,8 @@ import SockJS from "sockjs-client";
 import { Client } from '@stomp/stompjs';
 import {socketUrl} from './urls';
 
+const wsClient = null;
+
 export function initWebsocket() {
   const socket = () => new SockJS(socketUrl);
   const createdClient = new Client({
@@ -16,7 +18,7 @@ export function initWebsocket() {
     debug: (text) => console.log(text),
     onConnect: frame => {
       console.log('shit: ' + frame);
-      // setWSClient(createdClient);
+      wsClient = createdClient;
     },
     onDisconnect: () => { },
     // onWebSocketClose,
@@ -25,7 +27,9 @@ export function initWebsocket() {
   return () => createdClient.deactivate();
 }
 
-export function subscribeToWS(wsClient, url, callback){
+
+
+export function subscribeToWS( url, callback){
   wsClient.subscribe(url, messageOutput => {
     callback(JSON.parse(messageOutput.body));
   });

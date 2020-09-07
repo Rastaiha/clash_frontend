@@ -11,6 +11,8 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 export const SHIFT_MESSAGE = 'SHIFT_MESSAGE';
 export const SHIFT_REDIRECT = 'SHIFT_REDIRECT';
 
+export const new_Deck = 'new_Deck';
+
 //battle
 export const REQUEST_FIGHT_REQUEST = 'REQUEST_FIGHT_REQUEST';
 export const REQUEST_FIGHT_SUCCESS = 'REQUEST_FIGHT_SUCCESS';
@@ -38,3 +40,25 @@ export const CARD_TYPES_FAILURE = 'CARD_TYPES_FAILURE‌';
 export const CIVIL_CARD_REQUEST = 'CIVIL_CARD_REQUEST';
 export const CIVIL_CARD_SUCCESS = 'CIVIL_CARD_SUCCESS';
 export const CIVIL_CARD_FAILURE = 'CIVIL_CARD_FAILURE‌';
+
+
+export const BUY_CARD_REQUEST = 'BUY_CARD_REQUEST';
+export const BUY_CARD_SUCCESS = 'BUY_CARD_SUCCESS';
+export const Buy_CARD_FAILURE = 'Buy_CARD_FAILURE';
+
+export const SELL_CARD_REQUEST = 'SELL_CARD_REQUEST';
+export const SELL_CARD_SUCCESS = 'SELL_CARD_SUCCESS';
+export const SELL_CARD_FAILURE = 'SELL_CARD_FAILURE';
+
+export const discard_CARD_REQUEST = 'discard_CARD_REQUEST';
+export const discard_CARD_SUCCESS = 'discard_CARD_SUCCESS';
+export const discard_CARD_FAILURE = 'discard_CARD_FAILURE';
+
+
+export const pickup_CARD_REQUEST = 'pickup_CARD_REQUEST';
+export const pickup_CARD_SUCCESS = 'pickup_CARD_SUCCESS';
+export const pickup_CARD_FAILURE = 'pickup_CARD_FAILURE';
+
+export const MAPDATA_REQUEST = 'MAPDATA_REQUEST';
+export const MAPDATA_SUCCESS = 'MAPDATA_SUCCESS';
+export const MAPDATA_FAILURE = 'MAPDATA_FAILURE';
