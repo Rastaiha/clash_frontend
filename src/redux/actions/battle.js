@@ -33,21 +33,6 @@ export const putCard = ({ card }) => ({
   },
 });
 
-export const move = ({ x, y }) => ({
-  [CALL_API]: {
-    types: [
-      actionTypes.MOVE_REQUEST,
-      actionTypes.MOVE_SUCCESS,
-      actionTypes.MOVE_FAILURE,
-    ],
-    url: urls.MOVE,
-    fetchOptions: {
-      method: 'POST',
-      body: JSON.stringify({ x, y })
-    },
-  },
-});
-
 export const newDeck = (newDeck) => ({
   type: actionTypes.new_Deck,
   action: {

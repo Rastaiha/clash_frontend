@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import GameMap from '../components/konva/GameMap';
-import { move } from '../redux/actions/battle';
 import loadedImages from '../components/konva/loadedImages';
 import imageNames from '../components/konva/imageNames';
-import { movePlayer } from '../redux/actions/map';
+import { move } from '../redux/actions/map';
 import GameNav from '../components/GameNav/GameNav';
 
 class GamePage extends Component {
@@ -37,7 +36,7 @@ class GamePage extends Component {
       <div style={{ position: 'relative' }}>
         <GameNav />
         <GameMap
-          movePlayer={this.props.movePlayer}
+          movePlayer={this.props.move}
           mapEntities={this.props.map.mapEntities}
           players={this.props.players}
           width={this.props.map.width}

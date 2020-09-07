@@ -11,7 +11,7 @@ import {
 } from 'semantic-ui-react';
 import Card from '../components/battleElements/Card';
 import { login } from '../redux/actions/account';
-import { requestFight, move, newDeck } from '../redux/actions/battle';
+import { requestFight, newDeck } from '../redux/actions/battle';
 import { wsQueueFightUrl } from '../redux/actions/urls';
 import { subscribeToWS } from '../redux/actions/socketActions';
 
@@ -156,6 +156,5 @@ const mapSateToProps = (state) => ({
 export default connect(mapSateToProps, {
   login,
   requestFight,
-  move,
   newDeck,
 })(BattlePage);

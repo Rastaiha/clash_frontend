@@ -1,5 +1,4 @@
-
-import * as actionTypes from './actionTypes'
+import * as actionTypes from './actionTypes';
 import { CALL_API } from '../middleware/api/api';
 import * as urls from './urls';
 
@@ -14,6 +13,21 @@ export const getmapData = () => ({
     fetchOptions: {
       method: 'POST',
       body: JSON.stringify(),
+    },
+  },
+});
+
+export const move = ({ x, y }) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.MOVE_REQUEST,
+      actionTypes.MOVE_SUCCESS,
+      actionTypes.MOVE_FAILURE,
+    ],
+    url: urls.MOVE,
+    fetchOptions: {
+      method: 'POST',
+      body: JSON.stringify({ x, y }),
     },
   },
 });
