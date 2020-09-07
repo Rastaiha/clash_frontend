@@ -73,7 +73,7 @@ const initState = {
 
 function account(state = initState, action) {
   switch (action.type) {
-    case actionTypes.MOVE_PLAYER:
+    case actionTypes.MOVE_SUCCESS:
       const updatedUser = {
         username: state.user.username,
         x: action.payload.newPosition.x,
@@ -83,6 +83,12 @@ function account(state = initState, action) {
         ...state,
         user: updatedUser,
       };
+    case actionTypes.MAP_DATA_SUCCESS:
+      return {
+        ...state,
+        // fixme
+        map: action.payload.data,
+      }
     default:
       return state;
   }
