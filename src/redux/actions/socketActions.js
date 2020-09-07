@@ -1,6 +1,6 @@
-import SockJS from "sockjs-client";
+import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import {socketUrl} from './urls';
+import { socketUrl } from './urls';
 
 export var wsClient = null;
 export function initWebsocket() {
@@ -15,23 +15,20 @@ export function initWebsocket() {
     heartbeatIncoming: 5000,
     heartbeatOutgoing: 5000,
     debug: (text) => console.log(text),
-    onConnect: frame => {
+    onConnect: (frame) => {
       console.log('shit: ' + frame);
       wsClient = createdClient;
     },
-    onDisconnect: () => { },
+    onDisconnect: () => {},
     // onWebSocketClose,
   });
   createdClient.activate();
   // return () => createdClient.deactivate();
 }
 
-
-
-export function subscribeToWS( url, callback){
-  if(wsClient)
-    wsClient.subscribe(url, messageOutput => {
+export function subscribeToWS(url, callback) {
+  if (wsClient)
+    wsClient.subscribe(url, (messageOutput) => {
       callback(JSON.parse(messageOutput.body));
     });
-  
 }

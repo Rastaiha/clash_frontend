@@ -4,6 +4,7 @@ import GameMap from '../components/konva/GameMap';
 import imageNames from '../components/konva/imageNames';
 import loadedImages from '../components/konva/loadedImages';
 import { movePlayer } from '../redux/actions/map';
+import { Icon } from 'semantic-ui-react';
 
 class GamePage extends Component {
   constructor(props) {
@@ -29,14 +30,23 @@ class GamePage extends Component {
 
   render() {
     return (
-      <GameMap
-        movePlayer={this.props.movePlayer}
-        mapEntities={this.props.map.mapEntities}
-        players={this.props.players}
-        width={this.props.map.width}
-        height={this.props.map.height}
-        user={this.props.user}
-      />
+      <div style={{ position: 'relative' }}>
+        <div className="game-nav">
+          <div className="game-nav-container">
+            <div>
+              <Icon name="alarm" />
+            </div>
+          </div>
+        </div>
+        <GameMap
+          movePlayer={this.props.movePlayer}
+          mapEntities={this.props.map.mapEntities}
+          players={this.props.players}
+          width={this.props.map.width}
+          height={this.props.map.height}
+          user={this.props.user}
+        />
+      </div>
     );
   }
 }
