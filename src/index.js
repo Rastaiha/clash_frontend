@@ -10,7 +10,18 @@ import './statics/styles/index.css';
 import Messages from './Messages';
 import { initWebsocket } from './redux/actions/socketActions';
 
-const store = configureStore();
+const persistedState = localStorage.getItem('rastaReactState')
+  ? JSON.parse(localStorage.getItem('rastaReactState'))
+  : {};
+const store = configureStore(persistedState);
+store.subscribe(() => {
+  localStorage.setItem(
+    'rastaReactState',
+    JSON.stringify({
+      account: { ...store.getState().account },
+    })
+  );
+});
 
 initWebsocket();
 
