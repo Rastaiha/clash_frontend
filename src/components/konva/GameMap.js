@@ -1,14 +1,15 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { Group, Layer, Stage, Sprite } from 'react-konva';
-import { playerImages } from './constants';
+import { Group, Layer, Sprite, Stage } from 'react-konva';
+import { connect } from 'react-redux';
+import { subscribeToWS } from '../../redux/actions/socketActions';
+import { teamUrl } from '../../redux/actions/urls';
 import image_addresses from './images_src';
-import Moveable from './Moveable';
 import Player from './Player';
 import URLImage from './URLImage';
 
-export default class GameMap extends Component {
+class GameMap extends Component {
   constructor(props) {
     super(props);
 
@@ -45,13 +46,14 @@ export default class GameMap extends Component {
   }
 
   componentDidMount() {
-
     const image = new Image();
     image.src =
       process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier6.png';
     image.onload = () => {
       this.setState({ soldierImage: image });
     };
+
+    subscribeToWS(teamUrl, () => this.handlePlayerLoc);
   }
 
   componentWillUnmount() {
@@ -129,6 +131,16 @@ export default class GameMap extends Component {
     return animations;
   }
 
+  handlePlayerLoc = (newPlayer) => {
+    console.log(newPlayer);
+    const { players } = this.state;
+    let newPlayers = [newPlayer];
+    players.forEach((player) => {
+      if (player.playerName !== newPlayer.playerName) newPlayers.push(player);
+    });
+    this.setState({ players: newPlayers });
+  };
+
   onKeyEvent(key, e, startX, startY) {
     if (this.state.canMove) {
       let position = { ...this.state.position };
@@ -180,9 +192,8 @@ export default class GameMap extends Component {
             x: nextX,
             y: nextY,
           });
-          this.setState({canMove: true})
+          this.setState({ canMove: true });
         }, 1000);
-        
       }
     }
   }
@@ -367,3 +378,5 @@ export default class GameMap extends Component {
     );
   }
 }
+
+export default connect(null, {})(GameMap);

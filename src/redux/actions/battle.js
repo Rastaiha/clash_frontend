@@ -7,7 +7,7 @@ export const requestFight = ({ opponent }) => ({
     types: [
       actionTypes.REQUEST_FIGHT_REQUEST,
       actionTypes.REQUEST_FIGHT_SUCCESS,
-      actionTypes.REQUEST_FIGHT_FAILURE‌,
+      actionTypes.REQUEST_FIGHT_FAILURE,
     ],
     url: urls.REQUEST_FIGHT,
     fetchOptions: {
@@ -23,7 +23,7 @@ export const putCard = ({ card }) => ({
     types: [
       actionTypes.PUT_CARD_REQUEST,
       actionTypes.PUT_CARD_SUCCESS,
-      actionTypes.PUT_CARD_FAILURE‌,
+      actionTypes.PUT_CARD_FAILURE,
     ],
     url: urls.PUT_CARD,
     fetchOptions: {
@@ -38,7 +38,7 @@ export const move = ({ x, y }) => ({
     types: [
       actionTypes.MOVE_REQUEST,
       actionTypes.MOVE_SUCCESS,
-      actionTypes.MOVE_FAILURE‌,
+      actionTypes.MOVE_FAILURE,
     ],
     url: urls.MOVE,
     fetchOptions: {
@@ -47,3 +47,11 @@ export const move = ({ x, y }) => ({
     },
   },
 });
+
+export const newDeck = (newDeck) => ({
+  type: actionTypes.new_Deck,
+  action: {
+    data: newDeck
+  },
+});
+

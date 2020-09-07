@@ -18,7 +18,11 @@ import {
 import {
   requestFight,
   move,
+  newDeck,
 } from '../redux/actions/battle'
+import {wsQueueFightUrl} from '../redux/actions/urls';
+import { subscribeToWS } from '../redux/actions/socketActions';
+
 
 class BattlePage extends Component {
 
@@ -28,12 +32,40 @@ class BattlePage extends Component {
     this.state = {
       username: null,
       opponent: null,
+      running: false,
+      message: '',
+      results: [],
     }
     this.request = this.request.bind(this)
+    this.handleFightMsg = this.handleFightMsg.bind(this)
+    
   }
 
   componentDidMount() {
     this.props.login({ username: 'mahdi', password: '12345' });
+    
+    subscribeToWS( wsQueueFightUrl,  this.handleFightMsg);
+  }
+
+  handleFightMsg({ host, guest, remained, message, fightRounds })  {
+    if (host) {
+      this.setState({running: true, opponent:host.username === this.state.username ? guest : host });
+    } else if (remained)
+      this.setState({message: `${message} | ${remained}`});
+    else if (fightRounds) {
+      let newDeck = this.props.deck.map(card =>
+        fightRounds.some(({ winnerCard, loserCard }) =>
+          winnerCard.id === card.id || loserCard.id === card.id)
+          ? { ...card, used: true }
+          : { ...card, used: false }
+      );
+      this.props.newDeck(newDeck);
+      this.setState({results: fightRounds});
+    }
+    else {
+      this.setState({message});
+      setInterval(() => this.setState({running: false}), 1500);
+    }
   }
 
   request() {
@@ -42,7 +74,7 @@ class BattlePage extends Component {
     setTimeout(function () {
       this.props.requestFight({ username: this.state.opponent })
     }.bind(this)
-      , 2000)
+    , 2000);
   }
 
 
@@ -146,5 +178,6 @@ export default connect(
     login,
     requestFight,
     move,
+    newDeck,
   }
-)(BattlePage)
+)(BattlePage);
