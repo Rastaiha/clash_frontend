@@ -15,7 +15,7 @@ export const PUT_CARD = ROOT.concat('api/player/fight');
 export const MOVE = ROOT.concat('api/player/move/')
 
 export const loginUrl= ROOT.concat('authenticate');
-export const socketUrl= wss + baseUrl + 'websocket';
+export const socketUrl= https + baseUrl + 'websocket';
 export const mapDataUrl= ROOT.concat('api/game/map');
 export const moveUrl= ROOT.concat('api/player/move');
 export const topicSubscribeUrl= '/topic/gathering';
