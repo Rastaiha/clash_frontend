@@ -1,3 +1,6 @@
+import { connect } from 'react-redux';
+import { subscribeToWS } from '../../redux/actions/socketActions';
+import {teamUrl} from '../../redux/actions/urls'
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import React, { Component } from 'react';
 import { Layer, Rect, Stage, Group, Image } from 'react-konva';
@@ -10,7 +13,7 @@ import loadedImages from './loadedImages';
 import { ensureDirectoryExists } from 'jest-snapshot/build/utils';
 import _ from 'lodash';
 
-export default class GameMap extends Component {
+class GameMap extends Component {
   constructor(props) {
     super(props);
 
@@ -47,6 +50,7 @@ export default class GameMap extends Component {
 
   componentDidMount() {
     this.interval = setInterval(() => this.enableMoving(), 1000);
+    subscribeToWS(teamUrl, () => this.handlePlayerLoc);
   }
 
   componentWillUnmount() {
@@ -78,6 +82,17 @@ export default class GameMap extends Component {
     }
 
     return canMove;
+  }
+
+  handlePlayerLoc = newPlayer => {
+    console.log(newPlayer);
+    const { players } = this.state;
+    let newPlayers = [newPlayer];
+    players.forEach(player => {
+      if (player.playerName !== newPlayer.playerName)
+        newPlayers.push(player);
+    });
+    this.setState({ players: newPlayers })
   }
 
   onKeyEvent(key, e) {
@@ -121,6 +136,7 @@ export default class GameMap extends Component {
           y: nextY,
         });
       }
+
     }
   }
 
@@ -321,3 +337,8 @@ export default class GameMap extends Component {
     );
   }
 }
+
+
+export default connect(null, {
+  
+})(GameMap);
