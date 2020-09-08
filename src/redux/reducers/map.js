@@ -130,8 +130,7 @@ function map(state = initState, action) {
     case actionTypes.MAP_DATA_SUCCESS:
       return {
         ...state,
-        // fixme
-        map: action.payload.data,
+        map: action.response,
       };
     default:
       return state;

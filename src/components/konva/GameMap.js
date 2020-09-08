@@ -8,7 +8,8 @@ import { teamUrl } from '../../redux/actions/urls';
 import image_addresses from './images_src';
 import Player from './Player';
 import URLImage from './URLImage';
-import {animations} from './animationsUtills';
+import { animations } from './animationsUtills';
+import { getmapData, getPlayerStatus } from '../../redux/actions/map';
 
 class GameMap extends Component {
   constructor(props) {
@@ -95,6 +96,8 @@ class GameMap extends Component {
   }
 
   componentDidMount() {
+    this.props.getPlayerStatus();
+    this.props.getmapData();
     const image = new Image();
     image.src =
       process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png';
@@ -137,15 +140,12 @@ class GameMap extends Component {
     return canMove;
   }
 
-
-
   handlePlayerLoc = (newPlayer) => {
     console.log(newPlayer);
     const { players } = this.state;
     let newPlayers = [newPlayer];
     players.forEach((player) => {
-      if (player.playerName !== newPlayer.playerName)
-        newPlayers.push(player);
+      if (player.playerName !== newPlayer.playerName) newPlayers.push(player);
     });
     this.setState({ players: newPlayers });
   };
@@ -219,7 +219,8 @@ class GameMap extends Component {
       this.moveEntities(
         entity.id,
         (entity.x - startX + deltaX) * this.state.cellWidth,
-        (entity.y - startY + deltaY - (entity.height - 1)) * this.state.cellHeight
+        (entity.y - startY + deltaY - (entity.height - 1)) *
+          this.state.cellHeight
       );
     });
 
@@ -487,4 +488,4 @@ class GameMap extends Component {
   }
 }
 
-export default connect(null, {})(GameMap);
+export default connect(null, { getmapData, getPlayerStatus })(GameMap);

@@ -688,7 +688,7 @@ option {
   border-radius: 2px 2px 500px 500px;
   box-shadow: 5px 0 5px #e3b602ee, 0 3px 6px rgba(0, 0, 0, 0.16),
     0 3px 6px rgba(0, 0, 0, 0.23);
-  color: #01bcf5;
+  color: #63c1ff;
   text-shadow: 1px 1px #666;
   font-size: 28px;
   line-height: 28px;
@@ -712,6 +712,11 @@ option {
 
 .bagpack {
   margin-left: auto;
+}
+
+.alarmIcon:hover,
+.bagpack:hover {
+  cursor: pointer;
 }
 
 .rastakhiz {

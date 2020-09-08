@@ -87,11 +87,11 @@ export const sellCard = (cardId) => ({
 export const discardCard = (cardId) => ({
   [CALL_API]: {
     types: [
-      actionTypes.discard_CARD_REQUEST,
-      actionTypes.discard_CARD_SUCCESS,
-      actionTypes.discard_CARD_FAILURE,
+      actionTypes.DISCARD_CARD_REQUEST,
+      actionTypes.DISCARD_CARD_SUCCESS,
+      actionTypes.DISCARD_CARD_FAILURE,
     ],
-    url: urls.discard_Card(cardId),
+    url: urls.DISCARD_CARD(cardId),
     fetchOptions: {
       method: 'POST',
       dontContentType: false,
@@ -102,11 +102,11 @@ export const discardCard = (cardId) => ({
 export const pickupCard = (cardId) => ({
   [CALL_API]: {
     types: [
-      actionTypes.pickup_CARD_REQUEST,
-      actionTypes.pickup_CARD_SUCCESS,
-      actionTypes.pickup_CARD_FAILURE,
+      actionTypes.PICKUP_CARD_REQUEST,
+      actionTypes.PICKUP_CARD_SUCCESS,
+      actionTypes.PICKUP_CARD_FAILURE,
     ],
-    url: urls.pickup_Card(cardId),
+    url: urls.PICKUP_CARD(cardId),
     fetchOptions: {
       method: 'POST',
       dontContentType: false,
