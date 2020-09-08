@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import GameMap from '../components/konva/GameMap';
 import loadedImages from '../components/konva/loadedImages';
-import { movePlayer, updatePlayer, move } from '../redux/actions/map';
+import { movePlayer, updatePlayer } from '../redux/actions/map';
 import imageNames from '../components/konva/imageNames';
 import GameNav from '../components/GameNav/GameNav';
 
@@ -37,7 +37,7 @@ class GamePage extends Component {
         <GameNav />
         <GameMap
           updatePlayer={this.props.updatePlayer}
-          movePlayer={this.props.move}
+          movePlayer={this.props.movePlayer}
           mapEntities={this.props.map.mapEntities}
           players={this.props.players}
           width={this.props.map.width}
@@ -57,5 +57,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   updatePlayer,
-  move,
+  movePlayer,
 })(GamePage);

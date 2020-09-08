@@ -17,17 +17,12 @@ export const getmapData = () => ({
   },
 });
 
-export const movePlayer = (newPosition) => ({
-  type: actionTypes.MOVE_PLAYER,
-  payload: {newPosition}
-})
-
 export const updatePlayer = (username, newPosition) => ({
   type: actionTypes.UPDATE_OTHER_PLAYERS,
-  payload: {username, newPosition}
-})
+  payload: { username, newPosition },
+});
 
-export const move = ({ x, y }) => ({
+export const movePlayer = ({ x, y }) => ({
   [CALL_API]: {
     types: [
       actionTypes.MOVE_REQUEST,
@@ -39,6 +34,6 @@ export const move = ({ x, y }) => ({
       method: 'POST',
       body: JSON.stringify({ x, y }),
     },
+    payload: { newPosition: { x, y } },
   },
 });
-
