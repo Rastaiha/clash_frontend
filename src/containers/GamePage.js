@@ -11,6 +11,7 @@ class GamePage extends Component {
     super(props);
     this.state = {
       finishedLoad: false,
+      touchSupported: false,
     };
   }
   loadedImagesCount = 0;
@@ -29,6 +30,17 @@ class GamePage extends Component {
 
   componentDidMount() {
     // this.preloadImages();
+    this.setState({touchSupported: this.isTouchSupported()})
+  }
+
+  isTouchSupported() {
+    var msTouchEnabled = window.navigator.msMaxTouchPoints;
+    var generalTouchEnabled = 'ontouchstart' in document.createElement('div');
+
+    if (msTouchEnabled || generalTouchEnabled) {
+      return true;
+    }
+    return false;
   }
 
   render() {
@@ -47,6 +59,7 @@ class GamePage extends Component {
           width={this.props.map.width}
           height={this.props.map.height}
           user={this.props.user}
+          touchSupported={this.state.touchSupported}
         />
       </div>
     );

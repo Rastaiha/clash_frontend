@@ -10,13 +10,15 @@ import Player from './Player';
 import URLImage from './URLImage';
 import { animations } from './animationsUtills';
 import { getmapData, getPlayerStatus } from '../../redux/actions/map';
+import { Button, Icon } from 'semantic-ui-react';
+import './style.css';
 
 class GameMap extends Component {
   constructor(props) {
     super(props);
 
     this.getEntitiesInRange = this.getEntitiesInRange.bind(this);
-    this.secondOnKeyEvent = this.secondOnKeyEvent.bind(this);
+    this.onKeyEvent = this.onKeyEvent.bind(this);
     this.getCompassAngle = this.getCompassAngle.bind(this);
 
     let widthSize = Math.ceil(window.innerWidth / 100);
@@ -34,12 +36,6 @@ class GameMap extends Component {
       otherPlayers: [],
 
       canMove: true,
-
-      prePosition: {
-        x: null,
-        y: null,
-      },
-      preDirection: '',
 
       soldierImage: null,
       otherPlayersImage: null,
@@ -151,7 +147,7 @@ class GameMap extends Component {
     this.setState({ players: newPlayers });
   };
 
-  secondOnKeyEvent(key, e, startX, startY) {
+  onKeyEvent(key, e, startX, startY) {
     if (this.state.canMove) {
       let nextX = this.props.user.x;
       let nextY = this.props.user.y;
@@ -289,35 +285,6 @@ class GameMap extends Component {
     });
   }
 
-  onKeyEvent(key, e, startX, startY) {
-    if (this.state.canMove) {
-      let nextX = this.props.user.x;
-      let nextY = this.props.user.y;
-
-      switch (key) {
-        case 'right':
-          nextX += 1;
-          break;
-        case 'left':
-          nextX -= 1;
-          break;
-        case 'up':
-          nextY -= 1;
-          break;
-        case 'down':
-          nextY += 1;
-          break;
-        // eslint-disable-next-line no-fallthrough
-        default:
-          break;
-      }
-
-      if (this.checkNextPosition(nextX, nextY)) {
-        this.movePlayer(key, nextX, nextY, startX, startY);
-      }
-    }
-  }
-
   movePlayer(key, nextX, nextY, startX, startY) {
     this.setState({
       canMove: false,
@@ -387,16 +354,6 @@ class GameMap extends Component {
     let deltaX = this.props.compassPosition.x - compassX;
     let deltaY = this.props.compassPosition.y - compassY;
 
-    console.log(
-      '----',
-      deltaX,
-      deltaY,
-      compassX,
-      compassY,
-      this.props.compassPosition.x,
-      this.props.compassPosition.y
-    );
-
     var angle;
     if (deltaX <= 0 && deltaY <= 0) {
       angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
@@ -406,14 +363,11 @@ class GameMap extends Component {
       angle += 180;
     } else if (deltaX > 0 && deltaY < 0) {
       angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
-      // angle = 90 - angle;
     } else if (deltaX >= 0 && deltaY >= 0) {
       angle = (Math.atan(Math.abs(deltaY / deltaX)) * 180) / Math.PI;
       angle += 90;
     }
 
-    // let angle = (Math.atan(-1 * deltaX / deltaY) * 180) / Math.PI;
-    console.log('angle:', angle);
     return angle;
   }
 
@@ -558,7 +512,11 @@ class GameMap extends Component {
             <URLImage
               ref={(node) => (this.compass = node)}
               x={this.state.cellWidth / 2}
-              y={window.innerHeight - this.state.cellHeight / 2 - this.state.cellWidth}
+              y={
+                window.innerHeight -
+                this.state.cellHeight / 2 -
+                this.state.cellWidth
+              }
               src={process.env.PUBLIC_URL + '/images/compass.png'}
               width={this.state.cellWidth}
               height={this.state.cellHeight}
@@ -571,9 +529,44 @@ class GameMap extends Component {
         <KeyboardEventHandler
           handleKeys={['left', 'down', 'right', 'up']}
           onKeyEvent={(key, e) => {
-            this.secondOnKeyEvent(key, e, mapStartX, mapStartY);
+            this.onKeyEvent(key, e, mapStartX, mapStartY);
           }}
         />
+        {this.props.touchSupported && (
+          <Button.Group
+            vertical
+            style={{
+              position: 'absolute',
+              top: '40px',
+              left: '20px',
+            }}
+          >
+            <Button
+              icon="toggle up"
+              onClick={(e) => {
+                this.onKeyEvent('up', e, mapStartX, mapStartY);
+              }}
+            />
+            <Button
+              icon="toggle down"
+              onClick={(e) => {
+                this.onKeyEvent('down', e, mapStartX, mapStartY);
+              }}
+            />
+            <Button
+              icon="toggle left"
+              onClick={(e) => {
+                this.onKeyEvent('left', e, mapStartX, mapStartY);
+              }}
+            />
+            <Button
+              icon="toggle right"
+              onClick={(e) => {
+                this.onKeyEvent('right', e, mapStartX, mapStartY);
+              }}
+            />
+          </Button.Group>
+        )}
       </>
     );
   }
