@@ -260,8 +260,11 @@ class GameMap extends Component {
     const entitiesInMap = this.getEntitiesInRange(startX, startY);
     this.userSprite.start();
 
+    // console.log("entities in map:", entitiesInMap)
+    // console.log("nodes:", this.state.entitiesInMap)
+
     entitiesInMap.forEach((entity) => {
-      console.log('id:', entity.id);
+      // console.log('id:', entity.id);
       this.moveEntities(
         entity.id,
         (entity.x - startX + deltaX) * this.state.cellWidth,
@@ -292,14 +295,14 @@ class GameMap extends Component {
   }
 
   moveEntities(id, newX, newY) {
-    console.log(
-      'id:',
-      id,
-      this.state.entitiesInMap[id].imageNode.x(),
-      this.state.entitiesInMap[id].imageNode.y(),
-      newX,
-      newY
-    );
+    // console.log(
+    //   'id:',
+    //   id,
+    //   this.state.entitiesInMap[id].imageNode.x(),
+    //   this.state.entitiesInMap[id].imageNode.y(),
+    //   newX,
+    //   newY
+    // );
     this.state.entitiesInMap[id].imageNode.to({
       x: newX,
       y: newY,
@@ -457,7 +460,6 @@ class GameMap extends Component {
           <Layer ref={(layerEl) => (this.itemsLayer = layerEl)}>
             <Group>
               {newEntities.map((item) => {
-                console.log('size:', item.width, item.height);
                 return (
                   <>
                     <URLImage
