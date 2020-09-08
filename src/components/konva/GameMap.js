@@ -122,7 +122,7 @@ class GameMap extends Component {
     let itemInCell = _.find(this.props.mapEntities, (item) => {
       return item.x === x && item.y === y;
     });
-    if (itemInCell) {
+    if (itemInCell && itemInCell.name !== 'MOTEL') {
       canMove = false;
     } else {
       playerInCell = _.find(this.props.players, (player) => {
@@ -180,6 +180,8 @@ class GameMap extends Component {
           break;
       }
 
+      this.setState({direction: key})
+
       if (this.checkNextPosition(nextX, nextY)) {
         let horizontalCheck = key === 'right' || key === 'down' ? 1 : 0;
         let verticalCheck = key === 'right' || key === 'down' ? 0 : -1;
@@ -217,7 +219,6 @@ class GameMap extends Component {
     this.setState({
       canMove: false,
       imageCounter: this.state.imageCounter + 1,
-      direction: key,
     });
 
     // const entitiesInMap = this.getEntitiesInRange(startX, startY);
