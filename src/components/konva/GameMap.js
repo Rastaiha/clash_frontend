@@ -78,20 +78,20 @@ class GameMap extends Component {
       direction = deltaX > 0 ? 'right' : 'left';
     }
 
-    this.state.otherPlayers[prePlayer.username].animation(direction);
-    this.state.otherPlayers[prePlayer.username].start();
-    this.state.otherPlayers[prePlayer.username].to({
+    this.state.otherPlayers[prePlayer.username].spriteNode.animation(direction);
+    this.state.otherPlayers[prePlayer.username].spriteNode.start();
+    this.state.otherPlayers[prePlayer.username].player.to({
       x:
-        this.state.otherPlayers[prePlayer.username].x() +
+        this.state.otherPlayers[prePlayer.username].player.x() +
         deltaX * this.state.cellWidth,
       y:
-        this.state.otherPlayers[prePlayer.username].y() +
+        this.state.otherPlayers[prePlayer.username].player.y() +
         deltaY * this.state.cellHeight,
       duration: 0.9,
     });
 
     setTimeout(() => {
-      this.state.otherPlayers[prePlayer.username].stop();
+      this.state.otherPlayers[prePlayer.username].spriteNode.stop();
     }, 1000);
   }
 
@@ -214,8 +214,11 @@ class GameMap extends Component {
     const entitiesInMap = this.getEntitiesInRange(startX, startY);
     this.userSprite.start();
 
+    // console.log("entities in map:", entitiesInMap)
+    // console.log("nodes:", this.state.entitiesInMap)
+
     entitiesInMap.forEach((entity) => {
-      console.log('id:', entity.id);
+      // console.log('id:', entity.id);
       this.moveEntities(
         entity.id,
         (entity.x - startX + deltaX) * this.state.cellWidth,
@@ -247,14 +250,14 @@ class GameMap extends Component {
   }
 
   moveEntities(id, newX, newY) {
-    console.log(
-      'id:',
-      id,
-      this.state.entitiesInMap[id].imageNode.x(),
-      this.state.entitiesInMap[id].imageNode.y(),
-      newX,
-      newY
-    );
+    // console.log(
+    //   'id:',
+    //   id,
+    //   this.state.entitiesInMap[id].imageNode.x(),
+    //   this.state.entitiesInMap[id].imageNode.y(),
+    //   newX,
+    //   newY
+    // );
     this.state.entitiesInMap[id].imageNode.to({
       x: newX,
       y: newY,
@@ -263,8 +266,7 @@ class GameMap extends Component {
   }
 
   moveOtherPlayers(username, newX, newY) {
-    // this.state.otherPlayers[index].start();
-    this.state.otherPlayers[username].to({
+    this.state.otherPlayers[username].player.to({
       x: newX,
       y: newY,
       duration: 0.9,
@@ -412,7 +414,6 @@ class GameMap extends Component {
           <Layer ref={(layerEl) => (this.itemsLayer = layerEl)}>
             <Group>
               {newEntities.map((item) => {
-                console.log('size:', item.width, item.height);
                 return (
                   <>
                     <URLImage
@@ -436,9 +437,12 @@ class GameMap extends Component {
           <Layer ref={(layerEl) => (this.playersLayer = layerEl)}>
             <Group>
               {this.props.players.map((player) => {
+                const distanceFromUser =
+                  Math.abs(player.x - this.props.user.x) +
+                  Math.abs(player.y - this.props.user.y);
                 return (
                   <>
-                    <Sprite
+                    <Player
                       x={
                         (player.x - mapStartX) * this.state.cellWidth +
                         this.state.cellWidth / 2
@@ -447,9 +451,11 @@ class GameMap extends Component {
                         (player.y - mapStartY) * this.state.cellHeight +
                         this.state.cellHeight / 2
                       }
-                      ref={(sprite) =>
-                        (this.state.otherPlayers[player.username] = sprite)
+                      ref={(otherPlayer) =>
+                        (this.state.otherPlayers[player.username] = otherPlayer)
                       }
+                      buttonsEnabled={distanceFromUser <= 3 ? true : false}
+                      username={player.username}
                       image={this.state.otherPlayersImage}
                       animation={'down'}
                       animations={animations}
