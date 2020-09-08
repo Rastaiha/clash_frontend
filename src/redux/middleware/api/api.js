@@ -11,11 +11,7 @@ const callApi = async (url, fetchOptions) => {
   }
   const json_response = await response.json();
   if (!response.ok) {
-    if (
-      response.status === 401 &&
-      json_response.code &&
-      json_response.code === 'token_not_valid'
-    ) {
+    if (response.status === 401) {
       throw new Error('TOKEN_EXPIRED');
     }
     if (json_response.error) {

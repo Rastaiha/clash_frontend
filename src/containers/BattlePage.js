@@ -51,56 +51,49 @@ function BattlePage({ username, deck, playCard }) {
             <Segment>
               <h1>خون‌آشام‌های کفتارسفت VS بچه‌محل‌ها</h1>
               <br />
-              <div
-                style={{
-                  display: 'flex',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    width: '70%',
-                  }}
-                >
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                </div>
-                <div
-                  style={{
-                    width: '30%',
-                  }}
-                ></div>
+              <div className="their-cards-list">
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
               </div>
               <Divider horizontal>
                 <Label circular size="massive" fixed>
                   تایمر
                 </Label>
               </Divider>
-              <div
-                style={{
-                  display: 'flex',
-                }}
-              >
-                <div
-                  style={{
-                    width: '30%',
-                  }}
-                ></div>
-                <div
-                  style={{
-                    display: 'flex',
-                    width: '70%',
-                  }}
-                >
-                  <Card onClick={() => playCard} />
-                  <Card onClick={() => playCard} />
-                  <Card onClick={() => playCard} />
-                  <Card onClick={() => playCard} />
-                  <Card />
-                </div>
+              <div className="our-cards-list">
+                <Card
+                  isOurCards
+                  onClick={() => playCard}
+                  offset={2}
+                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                />
+                <Card
+                  isOurCards
+                  onClick={() => playCard}
+                  offset={1}
+                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                />
+                <Card
+                  isOurCards
+                  onClick={() => playCard}
+                  offset={0}
+                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                />
+                <Card
+                  isOurCards
+                  onClick={() => playCard}
+                  offset={-1}
+                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                />
+                <Card
+                  isOurCards
+                  onClick={() => playCard}
+                  offset={-2}
+                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                />
               </div>
             </Segment>
           </Grid.Column>

@@ -1,4 +1,3 @@
-import { initWebsocket } from '../actions/socketActions';
 import * as actionTypes from '../actions/actionTypes';
 
 function addMessaage({ state, type, text, mode }) {
@@ -26,7 +25,6 @@ function addRedirect({ state, to }) {
 function messages(state = { messages: [], redirects: [] }, action) {
   switch (action.type) {
     case actionTypes.LOGIN_SUCCESS:
-      initWebsocket();
       return addRedirect({
         state: state,
         to: '/game',

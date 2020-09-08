@@ -2,9 +2,9 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initState = { cardtypes: [], armory: [], backpack: [] };
 
-function ws(state = initState, action) {
+export default function cards(state = initState, action) {
   switch (action.type) {
-    case actionTypes.CARD_TYPES_SUCCESS:
+    case actionTypes.GET_CARD_TYPES_SUCCESS:
       return {
         ...state,
         cardtypes: action.response,
@@ -14,7 +14,7 @@ function ws(state = initState, action) {
         ...state,
         armory: action.response,
       };
-    case actionTypes.PLAYER_CARD_SUCCESS:
+    case actionTypes.PLAYER_CARDS_SUCCESS:
       return {
         ...state,
         backpack: action.response,
@@ -23,5 +23,3 @@ function ws(state = initState, action) {
       return state;
   }
 }
-
-export default ws;

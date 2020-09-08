@@ -13,7 +13,7 @@ function account(state = initState, action) {
         username: action.payload.username,
         token: action.response.token,
       };
-    case actionTypes.PLAYER_CARD_SUCCESS:
+    case actionTypes.PLAYER_CARDS_SUCCESS:
       return {
         ...state,
         deck: action.payload.data,

@@ -5,48 +5,39 @@ import { CALL_API } from '../middleware/api/api';
 export const getCardTypes = () => ({
   [CALL_API]: {
     types: [
-      actionTypes.CARD_TYPES_REQUEST,
-      actionTypes.CARD_TYPES_SUCCESS,
-      actionTypes.CARD_TYPES_FAILURE,
+      actionTypes.GET_CARD_TYPES_REQUEST,
+      actionTypes.GET_CARD_TYPES_SUCCESS,
+      actionTypes.GET_CARD_TYPES_FAILURE,
     ],
-    payload: {
-      
-    },
-    url: urls.cardTypeUrl,
+    url: urls.GET_CARD_TYPES,
     fetchOptions: {
       method: 'GET',
-      body: JSON.stringify(),
     },
   },
 });
 
-export const getCivilCards = () => ({
+export const getCivilizationsCards = () => ({
   [CALL_API]: {
     types: [
-      actionTypes.CIVIL_CARD_FAILURE,
-      actionTypes.CIVIL_CARD_REQUEST,
-      actionTypes.CIVIL_CARD_SUCCESS,
+      actionTypes.GET_CIVILIZATIONS_CARDS_REQUEST,
+      actionTypes.GET_CIVILIZATIONS_CARDS_SUCCESS,
+      actionTypes.GET_CIVILIZATIONS_CARDS_FAILURE,
     ],
-    payload: {
-      
-    },
-    url: urls.civilCardUrl,
+    url: urls.GET_CIVILIZATIONS_CARDS,
     fetchOptions: {
       method: 'GET',
-      body: JSON.stringify(),
     },
   },
 });
 
-
-export const playerCard = () => ({
+export const getPlayerCards = () => ({
   [CALL_API]: {
     types: [
-      actionTypes.PLAYER_CARD_REQUEST,
-      actionTypes.PLAYER_CARD_SUCCESS,
-      actionTypes.PLAYER_CARD_FAILURE,
+      actionTypes.PLAYER_CARDS_REQUEST,
+      actionTypes.PLAYER_CARDS_SUCCESS,
+      actionTypes.PLAYER_CARDS_FAILURE,
     ],
-    url: urls.cardUrl,
+    url: urls.GET_PLAYER_CARDS,
     fetchOptions: {
       method: 'GET',
       dontContentType: false,
@@ -54,7 +45,7 @@ export const playerCard = () => ({
   },
 });
 
-export const buyCard = (cardId) => ({
+export const buyCard = ({ cardId }) => ({
   [CALL_API]: {
     types: [
       actionTypes.BUY_CARD_REQUEST,
@@ -64,12 +55,12 @@ export const buyCard = (cardId) => ({
     url: urls.BUY_CARD(cardId),
     fetchOptions: {
       method: 'POST',
-      dontContentType: false,
+      body: JSON.stringify({}),
     },
   },
 });
 
-export const sellCard = (cardId) => ({
+export const sellCard = ({ cardId }) => ({
   [CALL_API]: {
     types: [
       actionTypes.SELL_CARD_REQUEST,
@@ -79,12 +70,12 @@ export const sellCard = (cardId) => ({
     url: urls.SELL_CARD(cardId),
     fetchOptions: {
       method: 'POST',
-      dontContentType: false,
+      body: JSON.stringify({}),
     },
   },
 });
 
-export const discardCard = (cardId) => ({
+export const discardCard = ({ cardId }) => ({
   [CALL_API]: {
     types: [
       actionTypes.DISCARD_CARD_REQUEST,
@@ -94,12 +85,12 @@ export const discardCard = (cardId) => ({
     url: urls.DISCARD_CARD(cardId),
     fetchOptions: {
       method: 'POST',
-      dontContentType: false,
+      body: JSON.stringify({}),
     },
   },
 });
 
-export const pickupCard = (cardId) => ({
+export const pickupCard = ({ cardId }) => ({
   [CALL_API]: {
     types: [
       actionTypes.PICKUP_CARD_REQUEST,
@@ -109,7 +100,22 @@ export const pickupCard = (cardId) => ({
     url: urls.PICKUP_CARD(cardId),
     fetchOptions: {
       method: 'POST',
-      dontContentType: false,
+      body: JSON.stringify({}),
+    },
+  },
+});
+
+export const upgradeCard = ({ cardId }) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.UPGRADE_CARD_REQUEST,
+      actionTypes.UPGRADE_CARD_SUCCESS,
+      actionTypes.UPGRADE_CARD_FAILURE,
+    ],
+    url: urls.UPGRADE_CARD(cardId),
+    fetchOptions: {
+      method: 'POST',
+      body: JSON.stringify({}),
     },
   },
 });

@@ -8,7 +8,6 @@ import Root from './root/Root';
 import configureStore from './redux/store/configureStore';
 import './statics/styles/index.css';
 import Messages from './Messages';
-import { initWebsocket } from './redux/actions/socketActions';
 
 const persistedState = localStorage.getItem('rastaReactState')
   ? JSON.parse(localStorage.getItem('rastaReactState'))
@@ -22,8 +21,6 @@ store.subscribe(() => {
     })
   );
 });
-
-initWebsocket();
 
 ReactDOM.render(
   <Router>

@@ -37,3 +37,36 @@ body {
 .front {
   background-image: url(https://images.unsplash.com/photo-1540206395-68808572332f?ixlib=rb-1.2.1&w=1181&q=80&auto=format&fit=crop);
 }
+
+.our-cards-list {
+  display: flex;
+  width: 70%;
+  margin-right: auto;
+  position: relative;
+}
+
+.their-cards-list {
+  display: flex;
+  width: 70%;
+  margin-left: auto;
+  position: relative;
+}
+
+.card-item {
+  width: 20%;
+  transform-origin: 50% 200%;
+  left: 40%;
+  margin: 4;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.card-item.our-card {
+  margin: 0;
+  position: absolute;
+}
+
+.card-item.our-card:hover {
+  box-shadow: 0 3px 6px rgba(0, 202, 17, 0.8);
+  border: 1px solid rgba(0, 202, 17, 1);
+  cursor: pointer;
+}
