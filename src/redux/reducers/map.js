@@ -14,7 +14,6 @@ const initState = {
         y: 10,
       },
       {
-
         id: 'entity2',
         name: 'MOTEL',
         width: 1,
@@ -57,8 +56,8 @@ const initState = {
       {
         id: 'entity7',
         name: 'INSTITUTE',
-        width: 2,
-        height: 2,
+        width: 1,
+        height: 1,
         x: 15,
         y: 14,
       },
@@ -93,17 +92,25 @@ const initState = {
   },
 };
 
-function account(state = initState, action) {
+function map(state = initState, action) {
   switch (action.type) {
-    case actionTypes.MOVE_SUCCESS:
-      const updatedUser = {
-        username: state.user.username,
-        x: action.payload.newPosition.x,
-        y: action.payload.newPosition.y,
-      };
+    case actionTypes.MOVE_REQUEST:
       return {
         ...state,
-        user: updatedUser,
+        user: {
+          ...state.user,
+          x: action.payload.newPosition.x,
+          y: action.payload.newPosition.y,
+        },
+      };
+    case actionTypes.MOVE_FAILURE:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          x: action.payload.newPosition.x,
+          y: action.payload.newPosition.y,
+        },
       };
     case actionTypes.UPDATE_OTHER_PLAYERS:
       const newPlayers = state.players.map((player) => {
@@ -123,12 +130,11 @@ function account(state = initState, action) {
     case actionTypes.MAP_DATA_SUCCESS:
       return {
         ...state,
-        // fixme
-        map: action.payload.data,
-      }
+        map: action.response,
+      };
     default:
       return state;
   }
 }
 
-export default account;
+export default map;

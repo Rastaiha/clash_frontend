@@ -14,6 +14,8 @@ export const LOGOUT = ROOT.concat('auth/logout/'); //TODO: fix url
 export const REQUEST_FIGHT = ROOT.concat('api/player/fight');
 export const PUT_CARD = ROOT.concat('api/player/fight');
 export const MOVE = ROOT.concat('api/player/move/');
+export const GET_PLAYER_STATUS = ROOT.concat('api/player/status/');
+export const GET_NOTIFICATIONS = ROOT.concat('api/notifications/');
 
 export const loginUrl = ROOT.concat('authenticate');
 export const socketUrl = https + baseUrl + 'websocket';
@@ -29,9 +31,9 @@ export const cardUrl = ROOT.concat('/api/player/card');
 export const cardTypeUrl = ROOT.concat('/api/armory/cardtype');
 export const civilCardUrl = '/api/civilization/card';
 
-export const pickup_Card = (cardId) =>
+export const PICKUP_CARD = (cardId) =>
   `${ROOT}api/armory/card/${cardId}/pickup`;
-export const discard_Card = (cardId) =>
+export const DISCARD_CARD = (cardId) =>
   `${ROOT}api/armory/card/${cardId}/discard`;
 export const SELL_CARD = (cardId) => `${ROOT}api/armory/card/${cardId}/sell`;
 export const BUY_CARD = (cardId) => `${ROOT}api/armory/card/${cardId}/buy`;

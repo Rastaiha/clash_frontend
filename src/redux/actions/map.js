@@ -11,23 +11,17 @@ export const getmapData = () => ({
     ],
     url: urls.mapDataUrl,
     fetchOptions: {
-      method: 'POST',
-      body: JSON.stringify(),
+      method: 'GET',
     },
   },
 });
 
-export const movePlayer = (newPosition) => ({
-  type: actionTypes.MOVE_PLAYER,
-  payload: {newPosition}
-})
-
 export const updatePlayer = (username, newPosition) => ({
   type: actionTypes.UPDATE_OTHER_PLAYERS,
-  payload: {username, newPosition}
-})
+  payload: { username, newPosition },
+});
 
-export const move = ({ x, y }) => ({
+export const movePlayer = ({ x, y }) => ({
   [CALL_API]: {
     types: [
       actionTypes.MOVE_REQUEST,
@@ -39,6 +33,20 @@ export const move = ({ x, y }) => ({
       method: 'POST',
       body: JSON.stringify({ x, y }),
     },
+    payload: { newPosition: { x, y } },
   },
 });
 
+export const getPlayerStatus = () => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.GET_PLAYER_STATUS_REQUEST,
+      actionTypes.GET_PLAYER_STATUS_SUCCESS,
+      actionTypes.GET_PLAYER_STATUS_FAILURE,
+    ],
+    url: urls.GET_PLAYER_STATUS,
+    fetchOptions: {
+      method: 'GET',
+    },
+  },
+});

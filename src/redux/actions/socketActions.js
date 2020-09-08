@@ -10,7 +10,8 @@ export function initWebsocket() {
     reconnectDelay: 0,
     connectHeaders: {
       login: {},
-      passcode: localStorage.getItem('username'),
+      passcode: JSON.parse(localStorage.getItem('rastaReactState')).account
+        .username,
     },
     heartbeatIncoming: 5000,
     heartbeatOutgoing: 5000,
@@ -20,15 +21,17 @@ export function initWebsocket() {
       wsClient = createdClient;
     },
     onDisconnect: () => {},
-    // onWebSocketClose,
+    onWebSocketClose: () => {},
   });
   createdClient.activate();
   // return () => createdClient.deactivate();
 }
 
 export function subscribeToWS(url, callback) {
-  if (wsClient)
+  if (!wsClient) setTimeout(() => subscribeToWS(url, callback), 1500);
+  else {
     wsClient.subscribe(url, (messageOutput) => {
       callback(JSON.parse(messageOutput.body));
     });
+  }
 }

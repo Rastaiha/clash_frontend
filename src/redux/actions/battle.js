@@ -34,7 +34,7 @@ export const putCard = ({ card }) => ({
 });
 
 export const newDeck = (newDeck) => ({
-  type: actionTypes.new_Deck,
+  type: actionTypes.NEW_DECK,
   action: {
     data: newDeck
   },

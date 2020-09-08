@@ -35,9 +35,12 @@ function Messages(props) {
     props.fastShift();
   };
 
+  if (props.redirects.length > 0) {
+    return shiftRedirect();
+  }
+
   return (
     <>
-      {props.redirects.length > 0 ? shiftRedirect() : ''}
       <div
         style={{
           position: 'fixed',

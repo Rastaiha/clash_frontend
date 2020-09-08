@@ -680,18 +680,50 @@ option {
 }
 
 .game-nav-container {
-  background: #B5B5B5cc;
+  background: #f7e8e8cc;
   margin: auto;
   width: 80%;
-  padding: 15px 30px;
+  padding: 5px 30px;
   margin-top: 10px;
   border-radius: 2px 2px 500px 500px;
-  box-shadow: 5px 0 5px #E3B602ee, 0 3px 6px rgba(0, 0, 0, 0.16),
+  box-shadow: 5px 0 5px #e3b602ee, 0 3px 6px rgba(0, 0, 0, 0.16),
     0 3px 6px rgba(0, 0, 0, 0.23);
+  color: #63c1ff;
+  text-shadow: 1px 1px #666;
+  font-size: 28px;
+  line-height: 28px;
+  max-width: 500px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 @media (max-width: 500px) {
   .game-nav-container {
     width: 95%;
   }
+}
+
+.alarmIcon {
+  margin-right: auto;
+}
+
+.bagpack {
+  margin-left: auto;
+}
+
+.alarmIcon:hover,
+.bagpack:hover {
+  cursor: pointer;
+}
+
+.rastakhiz {
+  margin: auto;
+}
+
+.game-nav-container img {
+  height: 30px;
+  filter: drop-shadow(2px 2px #888);
 }
