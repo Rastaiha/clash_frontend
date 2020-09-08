@@ -181,22 +181,31 @@ class GameMap extends Component {
       }
 
       if (this.checkNextPosition(nextX, nextY)) {
+        let horizontalCheck = key === 'right' || key === 'down' ? 1 : 0;
+        let verticalCheck = key === 'right' || key === 'down' ? 0 : -1;
+
         if (key === 'right' || key === 'left') {
           if (
-            nextX + Math.ceil(this.state.width / 2) <= this.props.width &&
-            nextX - Math.ceil(this.state.width / 2) >= 0
+            nextX + Math.ceil(this.state.width / 2) <
+              this.props.width + horizontalCheck &&
+            nextX - Math.ceil(this.state.width / 2) >= 0 + verticalCheck
           ) {
+            console.log('1.move map');
             this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
           } else {
+            console.log('1.move player');
             this.movePlayer(key, nextX, nextY, startX, startY);
           }
         } else {
           if (
-            nextY + Math.ceil(this.state.height / 2) <= this.props.height &&
-            nextY - Math.ceil(this.state.height / 2) >= 0
+            nextY + Math.ceil(this.state.height / 2) <
+              this.props.height + horizontalCheck &&
+            nextY - Math.ceil(this.state.height / 2) >= 0 + verticalCheck
           ) {
+            console.log('2.move map');
             this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
           } else {
+            console.log('2.move player');
             this.movePlayer(key, nextX, nextY, startX, startY);
           }
         }
@@ -211,21 +220,10 @@ class GameMap extends Component {
       direction: key,
     });
 
-    const entitiesInMap = this.getEntitiesInRange(startX, startY);
+    // const entitiesInMap = this.getEntitiesInRange(startX, startY);
     this.userSprite.start();
 
-    // console.log("entities in map:", entitiesInMap)
-    // console.log("nodes:", this.state.entitiesInMap)
-
-    entitiesInMap.forEach((entity) => {
-      // console.log('id:', entity.id);
-      this.moveEntities(
-        entity.id,
-        (entity.x - startX + deltaX) * this.state.cellWidth,
-        (entity.y - startY + deltaY - (entity.height - 1)) *
-          this.state.cellHeight
-      );
-    });
+    this.moveItemsLayer(deltaX, deltaY);
 
     this.props.players.forEach((player) => {
       this.moveOtherPlayers(
@@ -237,6 +235,8 @@ class GameMap extends Component {
       );
     });
 
+    this.moveBackground(deltaX, deltaY);
+
     setTimeout(() => {
       this.userSprite.stop();
 
@@ -245,19 +245,37 @@ class GameMap extends Component {
         y: nextY,
       });
 
+      this.backgroundLayer.x(
+        this.backgroundLayer.x() - deltaX * this.state.cellWidth
+      );
+      this.backgroundLayer.y(
+        this.backgroundLayer.y() - deltaY * this.state.cellHeight
+      );
+
+      this.itemsLayer.x(this.itemsLayer.x() - deltaX * this.state.cellWidth);
+      this.itemsLayer.y(this.itemsLayer.y() - deltaY * this.state.cellHeight);
+
       this.setState({ canMove: true });
     }, 1000);
   }
 
+  moveBackground(deltaX, deltaY) {
+    this.backgroundLayer.to({
+      x: this.backgroundLayer.x() + deltaX * this.state.cellWidth,
+      y: this.backgroundLayer.y() + deltaY * this.state.cellHeight,
+      duration: 0.9,
+    });
+  }
+
+  moveItemsLayer(deltaX, deltaY) {
+    this.itemsLayer.to({
+      x: this.itemsLayer.x() + deltaX * this.state.cellWidth,
+      y: this.itemsLayer.y() + deltaY * this.state.cellHeight,
+      duration: 0.9,
+    });
+  }
+
   moveEntities(id, newX, newY) {
-    // console.log(
-    //   'id:',
-    //   id,
-    //   this.state.entitiesInMap[id].imageNode.x(),
-    //   this.state.entitiesInMap[id].imageNode.y(),
-    //   newX,
-    //   newY
-    // );
     this.state.entitiesInMap[id].imageNode.to({
       x: newX,
       y: newY,
@@ -315,16 +333,18 @@ class GameMap extends Component {
     this.showAnimation(nextX, nextY, startX, startY);
 
     setTimeout(() => {
+      this.userSprite.stop();
+
       this.userSprite.absolutePosition({
         x: preX,
         y: preY,
       });
-      this.userSprite.stop();
 
       this.props.movePlayer({
         x: nextX,
         y: nextY,
       });
+
       this.setState({ canMove: true });
     }, 1000);
   }
@@ -340,11 +360,11 @@ class GameMap extends Component {
 
   getEntitiesInRange(mapStartX, mapStartY) {
     let xBound =
-      mapStartX + this.state.width <= this.props.width
+      mapStartX + this.state.width < this.props.width
         ? mapStartX + this.state.width
         : this.props.width;
     let yBound =
-      mapStartY + this.state.height <= this.props.height
+      mapStartY + this.state.height < this.props.height
         ? mapStartY + this.state.height
         : this.props.height;
 
@@ -398,8 +418,23 @@ class GameMap extends Component {
                 return (
                   <>
                     <URLImage
-                      x={(i % 15) * 100}
-                      y={parseInt(i / 15) * 100 - 300}
+                      x={(i % 19) * 100 - 200}
+                      y={parseInt(i / 19) * 100 - 200}
+                      src={
+                        process.env.PUBLIC_URL + '/images/sprites/floor2.png'
+                      }
+                      width={this.state.cellWidth}
+                      height={this.state.cellHeight}
+                    />
+                  </>
+                );
+              })}
+              {[...Array(600)].map((e, i) => {
+                return (
+                  <>
+                    <URLImage
+                      x={(i % 19) * 100 - 150}
+                      y={parseInt(i / 19) * 100 - 150}
                       src={
                         process.env.PUBLIC_URL + '/images/sprites/floor2.png'
                       }

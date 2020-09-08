@@ -84,10 +84,15 @@ const initState = {
       x: 1,
       y: 1,
     },
+    {
+      username: 'player5',
+      x: 16,
+      y: 25,
+    },
   ],
   user: {
     username: 'myUser',
-    x: 14,
+    x: 13,
     y: 15,
   },
 };

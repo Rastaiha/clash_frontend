@@ -53,13 +53,13 @@ class Player extends React.Component {
         ref={(player) => (this.player = player)}
       >
         {this.props.buttonsEnabled && (
-          <Button x={-30} y={15} text="جنگ" onClick={this.onFightClick} />
+          <Button x={-35} y={15} text="مبارزه" onClick={this.onFightClick} />
         )}
         {this.props.buttonsEnabled && (
           <Button
             x={30}
             y={15}
-            text="همکاری"
+            text="حل سوال"
             onClick={this.onCooperationClicked}
           />
         )}
