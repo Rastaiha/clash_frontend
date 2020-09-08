@@ -3,8 +3,8 @@ import _ from 'lodash';
 
 const initState = {
   map: {
-    width: 30,
-    height: 30,
+    width: 300,
+    height: 300,
     mapEntities: [],
   },
   players: [],

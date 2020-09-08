@@ -4,6 +4,7 @@ const addresses = {
     MOTEL: process.env.PUBLIC_URL + '/images/motel.png',
     WALL: process.env.PUBLIC_URL + '/images/sprites/tree.png',
     PLAYER: process.env.PUBLIC_URL + '/images/sprites/human/split/image_1_2.png',
+    TREE: process.env.PUBLIC_URL + '/images/sprites/tree.png'
 }
 
 export default addresses;

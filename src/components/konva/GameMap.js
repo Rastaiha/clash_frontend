@@ -20,8 +20,10 @@ class GameMap extends Component {
     super(props);
 
     this.getEntitiesInRange = this.getEntitiesInRange.bind(this);
+    this.getPlayersInRange = this.getPlayersInRange.bind(this);
     this.onKeyEvent = this.onKeyEvent.bind(this);
     this.getCompassAngle = this.getCompassAngle.bind(this);
+    this.onStageClicked = this.onStageClicked.bind(this);
 
     let widthSize = Math.ceil(window.innerWidth / 100);
     let heightSize = Math.ceil(window.innerHeight / 100);
@@ -51,49 +53,6 @@ class GameMap extends Component {
     this.onKeyEvent = this.onKeyEvent.bind(this);
   }
 
-  componentDidUpdate(preProps) {
-    if (preProps.players !== this.props.players) {
-      var changedPlayers = this.props.players.filter((player) => {
-        return preProps.players.indexOf(player) === -1;
-      });
-
-      changedPlayers.forEach((player) => {
-        const curPlayer = _.find(this.props.players, {
-          username: player.username,
-        });
-        this.handleChangedPlayer(player, curPlayer);
-      });
-    }
-  }
-
-  handleChangedPlayer(prePlayer, curPlayer) {
-    let deltaX = curPlayer.x - prePlayer.x;
-    let deltaY = curPlayer.y - prePlayer.y;
-
-    let direction = 'right';
-    if (deltaX === 0) {
-      direction = deltaY > 0 ? 'down' : 'up';
-    } else {
-      direction = deltaX > 0 ? 'right' : 'left';
-    }
-
-    this.state.otherPlayers[prePlayer.username].spriteNode.animation(direction);
-    this.state.otherPlayers[prePlayer.username].spriteNode.start();
-    this.state.otherPlayers[prePlayer.username].player.to({
-      x:
-        this.state.otherPlayers[prePlayer.username].player.x() +
-        deltaX * this.state.cellWidth,
-      y:
-        this.state.otherPlayers[prePlayer.username].player.y() +
-        deltaY * this.state.cellHeight,
-      duration: 0.9,
-    });
-
-    setTimeout(() => {
-      this.state.otherPlayers[prePlayer.username].spriteNode.stop();
-    }, 1000);
-  }
-
   componentDidMount() {
     this.props.getPlayerStatus();
     this.props.getMapData();
@@ -113,6 +72,58 @@ class GameMap extends Component {
     };
   }
 
+  componentDidUpdate(preProps) {
+
+    if (preProps.user !== this.props.user) {
+      console.log("hererererererere")
+    }
+
+    if (preProps.players !== this.props.players) {
+      var changedPlayers = this.props.players.filter((player) => {
+        // console.log("babaaaaa:", player, preProps.players.indexOf(player))
+        return preProps.players.indexOf(player) === -1;
+      });
+
+      changedPlayers.forEach((player) => {
+        const curPlayer = _.find(this.props.players, {
+          username: player.username,
+        });
+        // console.log("changed players:", player, curPlayer, player === curPlayer)
+        this.handleChangedPlayer(player, curPlayer);
+      });
+    }
+  }
+
+  handleChangedPlayer(prePlayer, curPlayer) {
+    let deltaX = curPlayer.x - prePlayer.x;
+    let deltaY = curPlayer.y - prePlayer.y;
+
+    let direction = 'right';
+    if (deltaX === 0) {
+      direction = deltaY > 0 ? 'down' : 'up';
+    } else {
+      direction = deltaX > 0 ? 'right' : 'left';
+    }
+
+    // console.log("otherPlayers", this.state.otherPlayers, prePlayer.username)
+
+    this.state.otherPlayers[prePlayer.username].spriteNode.animation(direction);
+    this.state.otherPlayers[prePlayer.username].spriteNode.start();
+    this.state.otherPlayers[prePlayer.username].player.to({
+      x:
+        this.state.otherPlayers[prePlayer.username].player.x() +
+        deltaX * this.state.cellWidth,
+      y:
+        this.state.otherPlayers[prePlayer.username].player.y() +
+        deltaY * this.state.cellHeight,
+      duration: 0.9,
+    });
+
+    setTimeout(() => {
+      this.state.otherPlayers[prePlayer.username].spriteNode.stop();
+    }, 1000);
+  }
+
   checkNextPosition(x, y) {
     let canMove = true;
     let playerInCell;
@@ -120,7 +131,7 @@ class GameMap extends Component {
     let itemInCell = _.find(this.props.mapEntities, (item) => {
       return item.x === x && item.y === y;
     });
-    if (itemInCell && itemInCell.name !== 'MOTEL') {
+    if (itemInCell && itemInCell.type !== 'MOTEL') {
       canMove = false;
     } else {
       playerInCell = _.find(this.props.players, (player) => {
@@ -181,30 +192,36 @@ class GameMap extends Component {
       this.setState({ direction: key });
 
       if (this.checkNextPosition(nextX, nextY)) {
-        let horizontalCheck = key === 'right' || key === 'down' ? 1 : 0;
-        let verticalCheck = key === 'right' || key === 'down' ? 0 : -1;
 
-        if (key === 'right' || key === 'left') {
-          if (
-            nextX + Math.ceil(this.state.width / 2) <
-              this.props.width + horizontalCheck &&
-            nextX - Math.ceil(this.state.width / 2) >= 0 + verticalCheck
-          ) {
-            this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
-          } else {
-            this.movePlayer(key, nextX, nextY, startX, startY);
-          }
-        } else {
-          if (
-            nextY + Math.ceil(this.state.height / 2) <
-              this.props.height + horizontalCheck &&
-            nextY - Math.ceil(this.state.height / 2) >= 0 + verticalCheck
-          ) {
-            this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
-          } else {
-            this.movePlayer(key, nextX, nextY, startX, startY);
-          }
-        }
+        this.props.movePlayer({
+          x: nextX,
+          y: nextY
+        })
+
+        // let horizontalCheck = key === 'right' || key === 'down' ? 1 : 0;
+        // let verticalCheck = key === 'right' || key === 'down' ? 0 : -1;
+
+        // if (key === 'right' || key === 'left') {
+        //   if (
+        //     nextX + Math.ceil(this.state.width / 2) <
+        //       this.props.width + horizontalCheck &&
+        //     nextX - Math.ceil(this.state.width / 2) >= 0 + verticalCheck
+        //   ) {
+        //     this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
+        //   } else {
+        //     this.movePlayer(key, nextX, nextY, startX, startY);
+        //   }
+        // } else {
+        //   if (
+        //     nextY + Math.ceil(this.state.height / 2) <
+        //       this.props.height + horizontalCheck &&
+        //     nextY - Math.ceil(this.state.height / 2) >= 0 + verticalCheck
+        //   ) {
+        //     this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
+        //   } else {
+        //     this.movePlayer(key, nextX, nextY, startX, startY);
+        //   }
+        // }
       }
     }
   }
@@ -336,8 +353,14 @@ class GameMap extends Component {
 
     xBound += 1;
     yBound += 1;
+    // console.log("in state:", this.state.width, this.state.height, mapStartX, mapStartY, this.props.width, this.props.height)
+
+    // console.log("bounds:", xBound, yBound)
+
+    // console.log("from:X", mapStartX - 1, ", toX:", xBound, ", fromY:", mapStartY - 1, ", toY:", yBound)
 
     let newEntities = this.props.mapEntities.filter((entity) => {
+      // console.log("entity:", entity.x, entity.y)
       return (
         mapStartX - 1 <= entity.x &&
         entity.x < xBound &&
@@ -346,6 +369,31 @@ class GameMap extends Component {
       );
     });
     return newEntities;
+  }
+
+  getPlayersInRange(mapStartX, mapStartY) {
+    let xBound =
+      mapStartX + this.state.width < this.props.width
+        ? mapStartX + this.state.width
+        : this.props.width;
+    let yBound =
+      mapStartY + this.state.height < this.props.height
+        ? mapStartY + this.state.height
+        : this.props.height;
+
+    xBound += 1;
+    yBound += 1;
+
+    let newPlayers = this.props.players.filter((player) => {
+      // console.log("entity:", entity.x, entity.y)
+      return (
+        mapStartX - 1 <= player.x &&
+        player.x < xBound &&
+        mapStartY - 1 <= player.y &&
+        player.y < yBound
+      );
+    });
+    return newPlayers;
   }
 
   getCompassAngle(startX, startY) {
@@ -372,6 +420,23 @@ class GameMap extends Component {
     return angle;
   }
 
+  onStageClicked(e, startX, startY) {
+    console.log("e:", e)
+
+    let clickedX = (e.target.attrs.x  - this.state.cellWidth / 2) / this.state.cellWidth + startX;
+    let clickedY = (e.target.attrs.y - this.state.cellHeight / 2) / this.state.cellHeight + startY
+
+    console.log("clickedX:", clickedX);
+    console.log("clickedY:", clickedY)
+
+    this.props.movePlayer({
+      x: clickedX,
+      y: clickedY
+    })
+
+
+  }
+
   render() {
     let mapStartX =
       this.props.user.x - Math.floor(Math.ceil(window.innerWidth / 100) / 2) >=
@@ -393,9 +458,12 @@ class GameMap extends Component {
       mapStartY = this.props.height - this.state.height;
     }
 
+    // console.log("propsssss:", this.props.mapEntities)
     let newEntities = this.getEntitiesInRange(mapStartX, mapStartY);
+    let newPlayers = this.getPlayersInRange(mapStartX, mapStartY);
     let compassAngle = this.getCompassAngle(mapStartX, mapStartY);
-    console.log('compass angle : ', compassAngle);
+
+    // console.log("in map:", newEntities)
 
     return (
       <>
@@ -403,6 +471,9 @@ class GameMap extends Component {
           width={window.innerWidth}
           height={window.innerHeight}
           ref={(stageEl) => (this.stageEl = stageEl)}
+          // onClick={(e) => {
+          //   this.onStageClicked(e, mapStartX, mapStartY)
+          // }}
         >
           <Layer ref={(layerEl) => (this.backgroundLayer = layerEl)}>
             <Group>
@@ -441,6 +512,7 @@ class GameMap extends Component {
           <Layer ref={(layerEl) => (this.itemsLayer = layerEl)}>
             <Group>
               {newEntities.map((item) => {
+                // console.log("item:", item)
                 return (
                   <>
                     <URLImage
@@ -452,7 +524,7 @@ class GameMap extends Component {
                         (item.y - mapStartY) * this.state.cellHeight -
                         (item.height - 1) * this.state.cellHeight
                       }
-                      src={image_addresses[item.name]}
+                      src={image_addresses[item.type]}
                       width={this.state.cellWidth * item.width}
                       height={this.state.cellHeight * item.height}
                     />
@@ -467,6 +539,7 @@ class GameMap extends Component {
                 const distanceFromUser =
                   Math.abs(player.x - this.props.user.x) +
                   Math.abs(player.y - this.props.user.y);
+                console.log("players:", distanceFromUser)
                 return (
                   <>
                     <Player

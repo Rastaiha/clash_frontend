@@ -66,14 +66,14 @@ class Player extends React.Component {
             x={-30}
             y={-15}
             onClick={this.onFightClick}
-            img={process.env.PUBLIC_URL + '/images/war.svg'}
+            img={process.env.PUBLIC_URL + '/images/war.png'}
           />
         )}
         {this.props.buttonsEnabled && (
           <Button
             x={40}
             y={-15}
-            img={process.env.PUBLIC_URL + '/images/think.svg'}
+            img={process.env.PUBLIC_URL + '/images/think.png'}
             onClick={this.onCooperationClicked}
           />
         )}
