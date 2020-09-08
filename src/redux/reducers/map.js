@@ -107,9 +107,9 @@ function map(state = initState, action) {
       return {
         ...state,
         user: {
-          ...state.user,
-          x: action.payload.newPosition.x,
-          y: action.payload.newPosition.y,
+          ...state.user, // TODO: fix connectino lose
+          // x: action.payload.newPosition.x,
+          // y: action.payload.newPosition.y,
         },
       };
     case actionTypes.UPDATE_OTHER_PLAYERS:
