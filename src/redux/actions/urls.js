@@ -16,6 +16,15 @@ export const PUT_CARD = ROOT.concat('api/player/fight');
 export const MOVE = ROOT.concat('api/player/move/');
 export const GET_PLAYER_STATUS = ROOT.concat('api/player/status/');
 export const GET_NOTIFICATIONS = ROOT.concat('api/notifications/');
+export const GET_CIVILIZATIONS_DETAILS = ROOT.concat('api/civilization/');
+export const GET_CIVILIZATIONS_CARDS = ROOT.concat('api/civilization/card');
+export const FIGHT_WITH_CIVILIZATION = ROOT.concat('api/civilization/fight');
+export const UPGRADE_CIVILIZATION = ROOT.concat('api/civilization/upgrade');
+export const GET_PLAYER_CARDS = ROOT.concat('api/player/card');
+export const GET_CARD_TYPES = ROOT.concat('api/armory/cardtype');
+export const GET_ANSWER = ROOT.concat('file/download/answer/');
+export const GET_QUESTION = ROOT.concat('file/download/question/');
+export const UPLOAD_ANSWER = ROOT.concat('file/upload/answer/');
 
 export const loginUrl = ROOT.concat('authenticate');
 export const socketUrl = https + baseUrl + 'websocket';
@@ -27,13 +36,12 @@ export const notificationUrl = '/user/queue/notification';
 
 export const wsQueueFightUrl = '/user/queue/fight';
 export const teamUrl = '/user/queue/team';
-export const cardUrl = ROOT.concat('/api/player/card');
-export const cardTypeUrl = ROOT.concat('/api/armory/cardtype');
-export const civilCardUrl = '/api/civilization/card';
 
 export const PICKUP_CARD = (cardId) =>
   `${ROOT}api/armory/card/${cardId}/pickup`;
+export const UPGRADE_CARD = (cardId) =>
+  `${ROOT}api/armory/card/${cardId}/pickup`;
 export const DISCARD_CARD = (cardId) =>
-  `${ROOT}api/armory/card/${cardId}/discard`;
+  `${ROOT}api/armory/card/${cardId}/upgrade`;
 export const SELL_CARD = (cardId) => `${ROOT}api/armory/card/${cardId}/sell`;
 export const BUY_CARD = (cardId) => `${ROOT}api/armory/card/${cardId}/buy`;

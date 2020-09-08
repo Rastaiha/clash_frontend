@@ -1,29 +1,20 @@
 import React, { Component } from 'react';
 import {
   getCardTypes,
-  getCivilCards,
-  playerCard,
+  getCivilizationsCards,
+  getPlayerCards,
   pickupCard,
   buyCard,
   discardCard,
   sellCard,
 } from '../redux/actions/cards';
 import { connect } from 'react-redux';
-import {
-  Container,
-  Grid,
-  Segment,
-  Header,
-  Divider,
-  Label,
-} from 'semantic-ui-react';
 import InventoryCard from '../components/battleElements/InventoryCard';
-import SpecialCard from '../components/battleElements/SpecialCard';
 
 class Inventory extends Component {
   getData = () => {
-    this.props.getCivilCards();
-    this.props.playerCard();
+    this.props.getCivilizationsCards();
+    this.props.getPlayerCards();
   };
 
   componentDidMount() {
@@ -32,21 +23,21 @@ class Inventory extends Component {
   }
 
   pickup = async (cardId) => {
-    await this.props.pickupCard(cardId);
+    await this.props.pickupCard({ cardId });
     this.getData();
   };
 
   discard = async (cardId) => {
-    await this.props.discardCard(cardId);
+    await this.props.discardCard({ cardId });
     this.getData();
   };
 
   sell = async (cardId) => {
-    await this.props.sellCard(cardId);
+    await this.props.sellCard({ cardId });
     this.getData();
   };
   buy = async (cardId) => {
-    await this.props.buyCard(cardId);
+    await this.props.buyCard({ cardId });
     this.getData();
   };
 
@@ -105,8 +96,8 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getCardTypes,
-  getCivilCards,
-  playerCard,
+  getCivilizationsCards,
+  getPlayerCards,
   pickupCard,
   buyCard,
   discardCard,
