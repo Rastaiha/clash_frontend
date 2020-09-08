@@ -1,29 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import URLImage from './URLImage';
 import { Group, Label, Sprite, Text, Tag, Rect } from 'react-konva';
 
-const Button = ({ x, y, text, onClick }) => {
+const Button = ({ x, y, img, onClick }) => {
   const [mouseOver, setMouseOver] = useState(false);
+  let groupRef = useRef(null);
   return (
     <Group
+      ref={groupRef}
       x={x}
       y={y}
       onMouseOver={() => {
+        groupRef.current.getStage().container().style.cursor = 'pointer';
         setMouseOver(true);
       }}
       onMouseOut={() => {
+        groupRef.current.getStage().container().style.cursor = 'default';
         setMouseOver(false);
       }}
       onClick={onClick}
+      cursor="pointer"
     >
-      <Label>
-        <Tag
-          fill={mouseOver ? '#163b5e' : '#1585ed'}
+      {img ? (
+        <URLImage
+          cursor="pointer"
+          style={{ cursor: 'pointer' }}
+          src={img}
+          width={20}
+          height={20}
           cornerRadius={5}
-          stroke="black"
+          strokeWidth={4}
         />
-        <Text text={text} fill="white" padding={5} align="center" />
-      </Label>
+      ) : null}
     </Group>
   );
 };
@@ -52,19 +60,23 @@ class Player extends React.Component {
         y={this.props.y}
         ref={(player) => (this.player = player)}
       >
+        <UsernameBox username={this.props.username} />
         {this.props.buttonsEnabled && (
-          <Button x={-35} y={15} text="مبارزه" onClick={this.onFightClick} />
+          <Button
+            x={-30}
+            y={-15}
+            onClick={this.onFightClick}
+            img={process.env.PUBLIC_URL + '/images/war.svg'}
+          />
         )}
         {this.props.buttonsEnabled && (
           <Button
-            x={30}
-            y={15}
-            text="حل سوال"
+            x={40}
+            y={-15}
+            img={process.env.PUBLIC_URL + '/images/think.svg'}
             onClick={this.onCooperationClicked}
           />
         )}
-
-        <UsernameBox username={this.props.username} />
 
         <Sprite
           x={0}

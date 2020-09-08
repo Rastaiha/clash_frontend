@@ -4,14 +4,16 @@ import { socketUrl } from './urls';
 
 export var wsClient = null;
 export function initWebsocket() {
+  const state = JSON.parse(localStorage.getItem('rastaReactState'));
+  if(!state)
+    return;
   const socket = () => new SockJS(socketUrl);
   const createdClient = new Client({
     webSocketFactory: socket,
     reconnectDelay: 0,
     connectHeaders: {
       login: {},
-      passcode: JSON.parse(localStorage.getItem('rastaReactState')).account
-        .username,
+      passcode: state.account.username,
     },
     heartbeatIncoming: 5000,
     heartbeatOutgoing: 5000,
