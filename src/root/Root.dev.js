@@ -6,6 +6,7 @@ import GamePage from '../containers/GamePage';
 import BattlePage from '../containers/BattlePage';
 import Inventory from '../containers/Inventory';
 import Login from '../containers/Login';
+import PrivateRoute from './PrivateRoute';
 
 import '../statics/styles/App.css';
 
@@ -14,9 +15,9 @@ const Root = () => {
     <>
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/game" component={GamePage} />
-        <Route path="/battle" component={BattlePage} />
-        <Route path="/civilization" component={Inventory} />
+        <PrivateRoute path="/game" component={GamePage} />
+        <PrivateRoute path="/battle" component={BattlePage} />
+        <PrivateRoute path="/civilization" component={Inventory} />
         <Route path="/" component={Homepage} />
       </Switch>
       <DevTools />

@@ -24,6 +24,21 @@ function addRedirect({ state, to }) {
 
 function messages(state = { messages: [], redirects: [] }, action) {
   switch (action.type) {
+    case actionTypes.LOGIN_SUCCESS:
+      return addRedirect({
+        state: state,
+        to: '/game',
+      });
+    case actionTypes.SHIFT_MESSAGE:
+      return {
+        ...state,
+        messages: state.messages.slice(1),
+      };
+    case actionTypes.SHIFT_REDIRECT:
+      return {
+        ...state,
+        redirects: state.redirects.slice(1),
+      };
     default:
       return state;
   }
