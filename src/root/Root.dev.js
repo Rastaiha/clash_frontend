@@ -17,7 +17,7 @@ const Root = () => {
         <Route path="/login" component={Login} />
         <PrivateRoute path="/game" component={GamePage} />
         <PrivateRoute path="/battle" component={BattlePage} />
-        <PrivateRoute path="/civilization" component={Inventory} />
+        <PrivateRoute path="/inventory" component={Inventory} />
         <Route path="/" component={Homepage} />
       </Switch>
       <DevTools />

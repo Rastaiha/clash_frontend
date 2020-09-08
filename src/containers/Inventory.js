@@ -50,36 +50,6 @@ class Inventory extends Component {
     this.getData();
   };
 
-  // old
-  // render() {
-  //   return (
-  //     <Container text style={{ direction: 'rtl' }}>
-  //       <Grid centered verticalAlign='middle' columns={2}>
-  //         <Grid.Row>
-  //           <Grid.Column textAlign='center' width={8}>
-  //             <Card />
-  //           </Grid.Column>
-  //           <Grid.Column textAlign='center' width={8}>
-  //             <Card />
-  //           </Grid.Column>
-  //         </Grid.Row>
-  //         <Grid.Row>
-  //           <Grid.Column textAlign='center' width={8}>
-  //             <Card />
-  //           </Grid.Column>
-  //         </Grid.Row>
-  //         <Grid.Row>
-  //           <Grid.Column textAlign='center' width={8}>
-  //             <Card />
-  //           </Grid.Column>
-  //           <Grid.Column textAlign='center' width={8}>
-  //             <Card />
-  //           </Grid.Column>
-  //         </Grid.Row>
-  //       </Grid>
-  //     </Container >
-  //   )
-  // }
   render() {
     const { armory, backpack, cardtypes } = this.props;
     return (
