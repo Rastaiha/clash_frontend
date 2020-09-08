@@ -3,30 +3,31 @@ import { Client } from '@stomp/stompjs';
 import { socketUrl } from './urls';
 
 export var wsClient = null;
-export function initWebsocket() {
+export function initWebsocket({ username }) {
   const state = JSON.parse(localStorage.getItem('rastaReactState'));
-  if(!state)
-    return;
+  if (!state) return;
   const socket = () => new SockJS(socketUrl);
   const createdClient = new Client({
     webSocketFactory: socket,
     reconnectDelay: 0,
     connectHeaders: {
       login: {},
-      passcode: state.account.username,
+      passcode: username,
     },
     heartbeatIncoming: 5000,
     heartbeatOutgoing: 5000,
     debug: (text) => console.log(text),
     onConnect: (frame) => {
-      console.log('shit: ' + frame);
       wsClient = createdClient;
     },
     onDisconnect: () => {},
     onWebSocketClose: () => {},
   });
   createdClient.activate();
-  // return () => createdClient.deactivate();
+}
+
+export function closeWebsocket() {
+  wsClient.deactivate();
 }
 
 export function subscribeToWS(url, callback) {
