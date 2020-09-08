@@ -1,15 +1,17 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { Group, Layer, Sprite, Stage, Circle } from 'react-konva';
+import { Group, Layer, Sprite, Stage } from 'react-konva';
 import { connect } from 'react-redux';
-import { subscribeToWS } from '../../redux/actions/socketActions';
-import { teamUrl } from '../../redux/actions/urls';
 import image_addresses from './images_src';
 import Player from './Player';
 import URLImage from './URLImage';
 import { animations } from './animationsUtills';
-import { getmapData, getPlayerStatus } from '../../redux/actions/map';
+import {
+  getMapData,
+  getPlayerStatus,
+  getPlayers,
+} from '../../redux/actions/map';
 
 class GameMap extends Component {
   constructor(props) {
@@ -52,10 +54,10 @@ class GameMap extends Component {
     this.onKeyEvent = this.onKeyEvent.bind(this);
   }
 
-  componentDidUpdate(preProps, preState) {
+  componentDidUpdate(preProps) {
     if (preProps.players !== this.props.players) {
-      var changedPlayers = preProps.players.filter((player) => {
-        return this.props.players.indexOf(player) === -1;
+      var changedPlayers = this.props.players.filter((player) => {
+        return preProps.players.indexOf(player) === -1;
       });
 
       changedPlayers.forEach((player) => {
@@ -97,7 +99,8 @@ class GameMap extends Component {
 
   componentDidMount() {
     this.props.getPlayerStatus();
-    // this.props.getmapData();
+    this.props.getMapData();
+    this.props.getPlayers({ myUsername: this.props.myUsername });
     const image = new Image();
     image.src =
       process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png';
@@ -111,8 +114,6 @@ class GameMap extends Component {
     image2.onload = () => {
       this.setState({ otherPlayersImage: image2 });
     };
-
-    subscribeToWS(teamUrl, () => this.handlePlayerLoc);
   }
 
   checkNextPosition(x, y) {
@@ -180,7 +181,7 @@ class GameMap extends Component {
           break;
       }
 
-      this.setState({direction: key})
+      this.setState({ direction: key });
 
       if (this.checkNextPosition(nextX, nextY)) {
         let horizontalCheck = key === 'right' || key === 'down' ? 1 : 0;
@@ -530,4 +531,12 @@ class GameMap extends Component {
   }
 }
 
-export default connect(null, { getmapData, getPlayerStatus })(GameMap);
+const mapStateToProps = (state) => ({
+  myUsername: state.account.username,
+});
+
+export default connect(mapStateToProps, {
+  getMapData,
+  getPlayerStatus,
+  getPlayers,
+})(GameMap);
