@@ -17,6 +17,7 @@ class GameMap extends Component {
 
     this.getEntitiesInRange = this.getEntitiesInRange.bind(this);
     this.secondOnKeyEvent = this.secondOnKeyEvent.bind(this);
+    this.getCompassAngle = this.getCompassAngle.bind(this);
 
     let widthSize = Math.ceil(window.innerWidth / 100);
     let heightSize = Math.ceil(window.innerHeight / 100);
@@ -180,7 +181,7 @@ class GameMap extends Component {
           break;
       }
 
-      this.setState({direction: key})
+      this.setState({ direction: key });
 
       if (this.checkNextPosition(nextX, nextY)) {
         let horizontalCheck = key === 'right' || key === 'down' ? 1 : 0;
@@ -192,10 +193,8 @@ class GameMap extends Component {
               this.props.width + horizontalCheck &&
             nextX - Math.ceil(this.state.width / 2) >= 0 + verticalCheck
           ) {
-            console.log('1.move map');
             this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
           } else {
-            console.log('1.move player');
             this.movePlayer(key, nextX, nextY, startX, startY);
           }
         } else {
@@ -204,10 +203,8 @@ class GameMap extends Component {
               this.props.height + horizontalCheck &&
             nextY - Math.ceil(this.state.height / 2) >= 0 + verticalCheck
           ) {
-            console.log('2.move map');
             this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
           } else {
-            console.log('2.move player');
             this.movePlayer(key, nextX, nextY, startX, startY);
           }
         }
@@ -383,6 +380,43 @@ class GameMap extends Component {
     return newEntities;
   }
 
+  getCompassAngle(startX, startY) {
+    let compassX = startX;
+    let compassY = startY + this.state.height - 3;
+
+    let deltaX = this.props.compassPosition.x - compassX;
+    let deltaY = this.props.compassPosition.y - compassY;
+
+    console.log(
+      '----',
+      deltaX,
+      deltaY,
+      compassX,
+      compassY,
+      this.props.compassPosition.x,
+      this.props.compassPosition.y
+    );
+
+    var angle;
+    if (deltaX <= 0 && deltaY <= 0) {
+      angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
+      angle *= -1;
+    } else if (deltaX < 0 && deltaY > 0) {
+      angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
+      angle += 180;
+    } else if (deltaX > 0 && deltaY < 0) {
+      angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
+      // angle = 90 - angle;
+    } else if (deltaX >= 0 && deltaY >= 0) {
+      angle = (Math.atan(Math.abs(deltaY / deltaX)) * 180) / Math.PI;
+      angle += 90;
+    }
+
+    // let angle = (Math.atan(-1 * deltaX / deltaY) * 180) / Math.PI;
+    console.log('angle:', angle);
+    return angle;
+  }
+
   render() {
     let mapStartX =
       this.props.user.x - Math.floor(Math.ceil(window.innerWidth / 100) / 2) >=
@@ -405,6 +439,8 @@ class GameMap extends Component {
     }
 
     let newEntities = this.getEntitiesInRange(mapStartX, mapStartY);
+    let compassAngle = this.getCompassAngle(mapStartX, mapStartY);
+    console.log('compass angle : ', compassAngle);
 
     return (
       <>
@@ -517,6 +553,19 @@ class GameMap extends Component {
                 frameRate={5}
               />
             </Group>
+          </Layer>
+          <Layer>
+            <URLImage
+              ref={(node) => (this.compass = node)}
+              x={this.state.cellWidth / 2}
+              y={window.innerHeight - this.state.cellHeight / 2 - this.state.cellWidth}
+              src={process.env.PUBLIC_URL + '/images/compass.png'}
+              width={this.state.cellWidth}
+              height={this.state.cellHeight}
+              offsetX={this.state.cellWidth / 2}
+              offsetY={this.state.cellHeight / 2}
+              rotation={compassAngle}
+            />
           </Layer>
         </Stage>
         <KeyboardEventHandler

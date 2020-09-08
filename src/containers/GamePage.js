@@ -36,6 +36,10 @@ class GamePage extends Component {
       <div style={{ position: 'relative' }}>
         <GameNav />
         <GameMap
+          compassPosition={{
+            x: 15,
+            y: 14,
+          }}
           updatePlayer={this.props.updatePlayer}
           movePlayer={this.props.movePlayer}
           mapEntities={this.props.map.mapEntities}
