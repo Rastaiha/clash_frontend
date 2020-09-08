@@ -97,7 +97,7 @@ class GameMap extends Component {
 
   componentDidMount() {
     this.props.getPlayerStatus();
-    this.props.getmapData();
+    // this.props.getmapData();
     const image = new Image();
     image.src =
       process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png';
