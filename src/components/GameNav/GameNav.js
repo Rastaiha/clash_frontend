@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
+import BagPack from '../modals/BagPack';
 
 export default function GameNav() {
   return (
@@ -11,9 +12,13 @@ export default function GameNav() {
         <div className="rastakhiz">
           <img src={process.env.PUBLIC_URL + '/images/rastakhiz.png'} />
         </div>
-        <div className="bagpack">
-          <img src={process.env.PUBLIC_URL + '/images/bagpack.png'} />
-        </div>
+        <BagPack
+          trigger={
+            <div className="bagpack">
+              <img src={process.env.PUBLIC_URL + '/images/bagpack.png'} />
+            </div>
+          }
+        />
       </div>
     </div>
   );
