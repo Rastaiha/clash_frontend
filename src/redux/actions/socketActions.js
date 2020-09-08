@@ -1,12 +1,12 @@
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import { socketUrl } from './urls';
+import { SOCKET_URL } from './urls';
 
 export var wsClient = null;
 export function initWebsocket({ username }) {
   const state = JSON.parse(localStorage.getItem('rastaReactState'));
   if (!state) return;
-  const socket = () => new SockJS(socketUrl);
+  const socket = () => new SockJS(SOCKET_URL);
   const createdClient = new Client({
     webSocketFactory: socket,
     reconnectDelay: 0,
@@ -20,8 +20,9 @@ export function initWebsocket({ username }) {
     onConnect: (frame) => {
       wsClient = createdClient;
     },
-    onDisconnect: () => {},
-    onWebSocketClose: () => {},
+    onDisconnect: () => {
+      setTimeout(initWebsocket({ username }), 1000);
+    },
   });
   createdClient.activate();
 }

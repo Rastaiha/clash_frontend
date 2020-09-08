@@ -25,10 +25,9 @@ export const GET_CARD_TYPES = ROOT.concat('api/armory/cardtype');
 export const GET_ANSWER = ROOT.concat('file/download/answer/');
 export const GET_QUESTION = ROOT.concat('file/download/question/');
 export const UPLOAD_ANSWER = ROOT.concat('file/upload/answer/');
+export const SOCKET_URL = https + baseUrl + 'websocket';
+export const GET_MAP_DATA = ROOT.concat('api/game/map');
 
-export const loginUrl = ROOT.concat('authenticate');
-export const socketUrl = https + baseUrl + 'websocket';
-export const mapDataUrl = ROOT.concat('api/game/map');
 export const moveUrl = ROOT.concat('api/player/move');
 export const topicSubscribeUrl = '/topic/gathering';
 export const sendMessageUrl = '/app/gathering';

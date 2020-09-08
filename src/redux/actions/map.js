@@ -5,11 +5,11 @@ import * as urls from './urls';
 export const getmapData = () => ({
   [CALL_API]: {
     types: [
-      actionTypes.MAP_DATA_REQUEST,
-      actionTypes.MAP_DATA_SUCCESS,
-      actionTypes.MAP_DATA_FAILURE,
+      actionTypes.GET_MAP_DATA_REQUEST,
+      actionTypes.GET_MAP_DATA_SUCCESS,
+      actionTypes.GET_MAP_DATA_FAILURE,
     ],
-    url: urls.mapDataUrl,
+    url: urls.GET_MAP_DATA,
     fetchOptions: {
       method: 'GET',
     },

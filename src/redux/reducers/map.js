@@ -132,7 +132,7 @@ function map(state = initState, action) {
         players: newPlayers,
       };
 
-    case actionTypes.MAP_DATA_SUCCESS:
+    case actionTypes.GET_MAP_DATA_SUCCESS:
       return {
         ...state,
         map: action.response,
