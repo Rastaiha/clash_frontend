@@ -12,13 +12,16 @@ import {
   getPlayerStatus,
   getPlayers,
 } from '../../redux/actions/map';
+import { Button, Icon } from 'semantic-ui-react';
+import './style.css';
 
 class GameMap extends Component {
   constructor(props) {
     super(props);
 
     this.getEntitiesInRange = this.getEntitiesInRange.bind(this);
-    this.secondOnKeyEvent = this.secondOnKeyEvent.bind(this);
+    this.onKeyEvent = this.onKeyEvent.bind(this);
+    this.getCompassAngle = this.getCompassAngle.bind(this);
 
     let widthSize = Math.ceil(window.innerWidth / 100);
     let heightSize = Math.ceil(window.innerHeight / 100);
@@ -35,12 +38,6 @@ class GameMap extends Component {
       otherPlayers: [],
 
       canMove: true,
-
-      prePosition: {
-        x: null,
-        y: null,
-      },
-      preDirection: '',
 
       soldierImage: null,
       otherPlayersImage: null,
@@ -151,7 +148,7 @@ class GameMap extends Component {
     this.setState({ players: newPlayers });
   };
 
-  secondOnKeyEvent(key, e, startX, startY) {
+  onKeyEvent(key, e, startX, startY) {
     if (this.state.canMove) {
       let nextX = this.props.user.x;
       let nextY = this.props.user.y;
@@ -193,10 +190,8 @@ class GameMap extends Component {
               this.props.width + horizontalCheck &&
             nextX - Math.ceil(this.state.width / 2) >= 0 + verticalCheck
           ) {
-            console.log('1.move map');
             this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
           } else {
-            console.log('1.move player');
             this.movePlayer(key, nextX, nextY, startX, startY);
           }
         } else {
@@ -205,10 +200,8 @@ class GameMap extends Component {
               this.props.height + horizontalCheck &&
             nextY - Math.ceil(this.state.height / 2) >= 0 + verticalCheck
           ) {
-            console.log('2.move map');
             this.moveMap(key, startX, startY, nextX, nextY, deltaX, deltaY);
           } else {
-            console.log('2.move player');
             this.movePlayer(key, nextX, nextY, startX, startY);
           }
         }
@@ -293,35 +286,6 @@ class GameMap extends Component {
     });
   }
 
-  onKeyEvent(key, e, startX, startY) {
-    if (this.state.canMove) {
-      let nextX = this.props.user.x;
-      let nextY = this.props.user.y;
-
-      switch (key) {
-        case 'right':
-          nextX += 1;
-          break;
-        case 'left':
-          nextX -= 1;
-          break;
-        case 'up':
-          nextY -= 1;
-          break;
-        case 'down':
-          nextY += 1;
-          break;
-        // eslint-disable-next-line no-fallthrough
-        default:
-          break;
-      }
-
-      if (this.checkNextPosition(nextX, nextY)) {
-        this.movePlayer(key, nextX, nextY, startX, startY);
-      }
-    }
-  }
-
   movePlayer(key, nextX, nextY, startX, startY) {
     this.setState({
       canMove: false,
@@ -384,6 +348,30 @@ class GameMap extends Component {
     return newEntities;
   }
 
+  getCompassAngle(startX, startY) {
+    let compassX = startX;
+    let compassY = startY + this.state.height - 3;
+
+    let deltaX = this.props.compassPosition.x - compassX;
+    let deltaY = this.props.compassPosition.y - compassY;
+
+    var angle;
+    if (deltaX <= 0 && deltaY <= 0) {
+      angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
+      angle *= -1;
+    } else if (deltaX < 0 && deltaY > 0) {
+      angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
+      angle += 180;
+    } else if (deltaX > 0 && deltaY < 0) {
+      angle = (Math.atan(Math.abs(deltaX / deltaY)) * 180) / Math.PI;
+    } else if (deltaX >= 0 && deltaY >= 0) {
+      angle = (Math.atan(Math.abs(deltaY / deltaX)) * 180) / Math.PI;
+      angle += 90;
+    }
+
+    return angle;
+  }
+
   render() {
     let mapStartX =
       this.props.user.x - Math.floor(Math.ceil(window.innerWidth / 100) / 2) >=
@@ -406,6 +394,8 @@ class GameMap extends Component {
     }
 
     let newEntities = this.getEntitiesInRange(mapStartX, mapStartY);
+    let compassAngle = this.getCompassAngle(mapStartX, mapStartY);
+    console.log('compass angle : ', compassAngle);
 
     return (
       <>
@@ -519,13 +509,65 @@ class GameMap extends Component {
               />
             </Group>
           </Layer>
+          <Layer>
+            <URLImage
+              ref={(node) => (this.compass = node)}
+              x={this.state.cellWidth / 2}
+              y={
+                window.innerHeight -
+                this.state.cellHeight / 2 -
+                this.state.cellWidth
+              }
+              src={process.env.PUBLIC_URL + '/images/compass.png'}
+              width={this.state.cellWidth}
+              height={this.state.cellHeight}
+              offsetX={this.state.cellWidth / 2}
+              offsetY={this.state.cellHeight / 2}
+              rotation={compassAngle}
+            />
+          </Layer>
         </Stage>
         <KeyboardEventHandler
           handleKeys={['left', 'down', 'right', 'up']}
           onKeyEvent={(key, e) => {
-            this.secondOnKeyEvent(key, e, mapStartX, mapStartY);
+            this.onKeyEvent(key, e, mapStartX, mapStartY);
           }}
         />
+        {this.props.touchSupported && (
+          <Button.Group
+            vertical
+            style={{
+              position: 'absolute',
+              top: '40px',
+              left: '20px',
+            }}
+          >
+            <Button
+              icon="toggle up"
+              onClick={(e) => {
+                this.onKeyEvent('up', e, mapStartX, mapStartY);
+              }}
+            />
+            <Button
+              icon="toggle down"
+              onClick={(e) => {
+                this.onKeyEvent('down', e, mapStartX, mapStartY);
+              }}
+            />
+            <Button
+              icon="toggle left"
+              onClick={(e) => {
+                this.onKeyEvent('left', e, mapStartX, mapStartY);
+              }}
+            />
+            <Button
+              icon="toggle right"
+              onClick={(e) => {
+                this.onKeyEvent('right', e, mapStartX, mapStartY);
+              }}
+            />
+          </Button.Group>
+        )}
       </>
     );
   }

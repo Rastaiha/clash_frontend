@@ -1,22 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Container, Grid, Segment, Divider, Label } from 'semantic-ui-react';
 import Card from '../components/battleElements/Card';
 import { newDeck } from '../redux/actions/battle';
-import { wsQueueFightUrl } from '../redux/actions/urls';
-import { subscribeToWS } from '../redux/actions/socketActions';
 
 function BattlePage({ username, deck, playCard }) {
   const [results, setResults] = useState([]);
   const [opponent, setOpponent] = useState({ username: '' });
   const [message, setMessage] = useState('');
   const [running, setRunning] = useState(false);
-
-  useEffect(() => {
-    subscribeToWS(wsQueueFightUrl, (message) => {
-      handleFightMsg(JSON.parse(message.body));
-    });
-  }, []);
 
   const handleFightMsg = useCallback(
     ({ host, guest, remained, message, fightRounds }) => {

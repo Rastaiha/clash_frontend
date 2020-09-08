@@ -15,6 +15,7 @@ export const REQUEST_FIGHT = ROOT.concat('api/player/fight');
 export const PUT_CARD = ROOT.concat('api/player/fight');
 export const MOVE = ROOT.concat('api/player/move/');
 export const GET_PLAYER_STATUS = ROOT.concat('api/player/status/');
+export const GET_PLAYERS = ROOT.concat('api/game/');
 export const GET_NOTIFICATIONS = ROOT.concat('api/notifications/');
 export const GET_CIVILIZATIONS_DETAILS = ROOT.concat('api/civilization/');
 export const GET_CIVILIZATIONS_CARDS = ROOT.concat('api/civilization/card');
@@ -34,7 +35,7 @@ export const sendMessageUrl = '/app/gathering';
 export const notificationUrl = '/user/queue/notification';
 
 export const wsQueueFightUrl = '/user/queue/fight';
-export const teamUrl = '/user/queue/team';
+export const teamUrl = '/user/queue/map';
 
 export const PICKUP_CARD = (cardId) =>
   `${ROOT}api/armory/card/${cardId}/pickup`;

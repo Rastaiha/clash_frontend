@@ -2,7 +2,7 @@ import * as actionTypes from './actionTypes';
 import { CALL_API } from '../middleware/api/api';
 import * as urls from './urls';
 
-export const getmapData = () => ({
+export const getMapData = () => ({
   [CALL_API]: {
     types: [
       actionTypes.GET_MAP_DATA_REQUEST,
@@ -16,9 +16,9 @@ export const getmapData = () => ({
   },
 });
 
-export const updatePlayer = (username, newPosition) => ({
+export const updatePlayer = ({ playerName, x, y }) => ({
   type: actionTypes.UPDATE_OTHER_PLAYERS,
-  payload: { username, newPosition },
+  payload: { username: playerName, x, y },
 });
 
 export const movePlayer = ({ x, y }) => ({
@@ -48,5 +48,20 @@ export const getPlayerStatus = () => ({
     fetchOptions: {
       method: 'GET',
     },
+  },
+});
+
+export const getPlayers = ({ myUsername }) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.GET_PLAYERS_REQUEST,
+      actionTypes.GET_PLAYERS_SUCCESS,
+      actionTypes.GET_PLAYERS_FAILURE,
+    ],
+    url: urls.GET_PLAYERS,
+    fetchOptions: {
+      method: 'GET',
+    },
+    payload: { myUsername },
   },
 });

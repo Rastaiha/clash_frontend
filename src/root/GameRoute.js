@@ -4,11 +4,21 @@ import PrivateRoute from './PrivateRoute';
 import GamePage from '../containers/GamePage';
 import BattlePage from '../containers/BattlePage';
 import Inventory from '../containers/Inventory';
+import { updatePlayer } from '../redux/actions/map';
 import { connect } from 'react-redux';
+import { teamUrl } from '../redux/actions/urls';
 
 class GameRoute extends Component {
   componentDidMount() {
-    initWebsocket({ username: this.props.username });
+    initWebsocket({
+      username: this.props.username,
+      subscriptions: [
+        {
+          url: teamUrl,
+          callback: (body) => this.props.updatePlayer(body),
+        },
+      ],
+    });
   }
   componentWillUnmount() {
     closeWebsocket();
@@ -28,4 +38,4 @@ const mapStateToProps = (state) => ({
   username: state.account.username,
 });
 
-export default connect(mapStateToProps)(GameRoute);
+export default connect(mapStateToProps, { updatePlayer })(GameRoute);

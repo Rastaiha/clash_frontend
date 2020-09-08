@@ -1,99 +1,17 @@
 import * as actionTypes from '../actions/actionTypes';
+import _ from 'lodash';
 
 const initState = {
   map: {
     width: 30,
     height: 30,
-    mapEntities: [
-      {
-        id: 'entity1',
-        name: 'MOTEL',
-        width: 1,
-        height: 1,
-        x: 10,
-        y: 10,
-      },
-      {
-        id: 'entity2',
-        name: 'MOTEL',
-        width: 1,
-        height: 1,
-        x: 2,
-        y: 3,
-      },
-      {
-        id: 'entity3',
-        name: 'MOTEL',
-        width: 1,
-        height: 1,
-        x: 20,
-        y: 4,
-      },
-      {
-        id: 'entity4',
-        name: 'INSTITUTE',
-        width: 1,
-        height: 1,
-        x: 15,
-        y: 15,
-      },
-      {
-        id: 'entity5',
-        name: 'WALL',
-        width: 1,
-        height: 1,
-        x: 16,
-        y: 15,
-      },
-      {
-        id: 'entity6',
-        name: 'MOTEL',
-        width: 1,
-        height: 1,
-        x: 17,
-        y: 15,
-      },
-      {
-        id: 'entity7',
-        name: 'INSTITUTE',
-        width: 1,
-        height: 1,
-        x: 15,
-        y: 14,
-      },
-    ],
+    mapEntities: [],
   },
-  players: [
-    {
-      username: 'player1',
-      x: 12,
-      y: 14,
-    },
-    {
-      username: 'player2',
-      x: 14,
-      y: 17,
-    },
-    {
-      username: 'player3',
-      x: 18,
-      y: 12,
-    },
-    {
-      username: 'player4',
-      x: 1,
-      y: 1,
-    },
-    {
-      username: 'player5',
-      x: 16,
-      y: 25,
-    },
-  ],
+  players: [],
   user: {
     username: 'myUser',
-    x: 13,
-    y: 15,
+    x: 10,
+    y: 10,
   },
 };
 
@@ -118,24 +36,55 @@ function map(state = initState, action) {
         },
       };
     case actionTypes.UPDATE_OTHER_PLAYERS:
-      const newPlayers = state.players.map((player) => {
-        return player.username === action.payload.username
-          ? {
-              ...player,
-              x: action.payload.newPosition.x,
-              y: action.payload.newPosition.y,
-            }
-          : player;
-      });
       return {
         ...state,
-        players: newPlayers,
+        players: state.players.map((player) => {
+          return player.username.toUpperCase() ===
+            action.payload.username.toUpperCase()
+            ? {
+                ...player,
+                x: action.payload.x,
+                y: action.payload.y,
+              }
+            : player;
+        }),
       };
 
     case actionTypes.GET_MAP_DATA_SUCCESS:
       return {
         ...state,
-        map: action.response,
+        map: {
+          ...action.response,
+          mapEntities: action.response.mapEntities.map((entity) => ({
+            width: 1,
+            height: 1,
+            ...entity,
+          })),
+        },
+      };
+    case actionTypes.GET_PLAYERS_SUCCESS:
+      return {
+        ...state,
+        players: action.response
+          .filter(
+            (player) =>
+              player.playerName.toUpperCase() !==
+              action.payload.myUsername.toUpperCase()
+          )
+          .map((player) => ({
+            ...player,
+            username: player.playerName,
+          })),
+        user: action.response
+          .filter(
+            (player) =>
+              player.playerName.toUpperCase() ===
+              action.payload.myUsername.toUpperCase()
+          )
+          .map((player) => ({
+            ...player,
+            username: player.playerName,
+          }))[0],
       };
     default:
       return state;
