@@ -13,7 +13,7 @@ import {
   getPlayers,
   movePlayer,
 } from '../../redux/actions/map';
-import { Button } from 'semantic-ui-react';
+import { Button, Grid } from 'semantic-ui-react';
 import './style.css';
 
 class GameMap extends Component {
@@ -24,7 +24,6 @@ class GameMap extends Component {
     this.getPlayersInRange = this.getPlayersInRange.bind(this);
     this.onKeyEvent = this.onKeyEvent.bind(this);
     this.getCompassAngle = this.getCompassAngle.bind(this);
-    this.onStageClicked = this.onStageClicked.bind(this);
 
     let widthSize = Math.ceil(window.innerWidth / 100);
     let heightSize = Math.ceil(window.innerHeight / 100);
@@ -431,7 +430,9 @@ class GameMap extends Component {
 
   getCompassAngle(startX, startY) {
     let compassX = startX;
-    let compassY = startY + this.state.height - 3;
+    let compassY = this.props.touchSupported
+      ? startY + this.state.height - 4
+      : startY + this.state.height - 3;
 
     let deltaX = this.props.compassPosition.x - compassX;
     let deltaY = this.props.compassPosition.y - compassY;
@@ -453,24 +454,6 @@ class GameMap extends Component {
     return angle;
   }
 
-  onStageClicked(e, startX, startY) {
-    console.log('e:', e);
-
-    let clickedX =
-      (e.target.attrs.x - this.state.cellWidth / 2) / this.state.cellWidth +
-      startX;
-    let clickedY =
-      (e.target.attrs.y - this.state.cellHeight / 2) / this.state.cellHeight +
-      startY;
-
-    console.log('clickedX:', clickedX);
-    console.log('clickedY:', clickedY);
-
-    this.props.movePlayer({
-      x: clickedX,
-      y: clickedY,
-    });
-  }
 
   render() {
     let mapStartX =
@@ -493,12 +476,9 @@ class GameMap extends Component {
       mapStartY = this.props.height - this.state.height;
     }
 
-    // console.log("propsssss:", this.props.mapEntities)
     let newEntities = this.getEntitiesInRange(mapStartX, mapStartY);
     let newPlayers = this.getPlayersInRange(mapStartX, mapStartY);
     let compassAngle = this.getCompassAngle(mapStartX, mapStartY);
-
-    // console.log("in map:", newEntities)
 
     return (
       <>
@@ -506,9 +486,6 @@ class GameMap extends Component {
           width={window.innerWidth}
           height={window.innerHeight}
           ref={(stageEl) => (this.stageEl = stageEl)}
-          // onClick={(e) => {
-          //   this.onStageClicked(e, mapStartX, mapStartY);
-          // }}
         >
           <Layer ref={(layerEl) => (this.backgroundLayer = layerEl)}>
             <Group>
@@ -621,9 +598,13 @@ class GameMap extends Component {
               ref={(node) => (this.compass = node)}
               x={this.state.cellWidth / 2}
               y={
-                window.innerHeight -
-                this.state.cellHeight / 2 -
-                this.state.cellWidth
+                this.props.touchSupported
+                  ? window.innerHeight -
+                    this.state.cellHeight / 2 -
+                    2 * this.state.cellWidth
+                  : window.innerHeight -
+                    this.state.cellHeight / 2 -
+                    this.state.cellWidth
               }
               src={process.env.PUBLIC_URL + '/images/compass.png'}
               width={this.state.cellWidth}
@@ -641,41 +622,64 @@ class GameMap extends Component {
           }}
         />
         {this.props.touchSupported && (
-          <Button.Group
-            vertical
+          <Grid
             style={{
               position: 'absolute',
-              top: '40px',
               left: '20px',
+              top:
+                window.innerHeight -
+                this.state.cellHeight / 2 -
+                this.state.cellWidth +
+                'px',
+              width: '100px',
             }}
           >
-            <Button
-              icon="toggle up"
-              onClick={(e) => {
-                this.onKeyEvent('up', e, mapStartX, mapStartY);
-              }}
-            />
-            <Button
-              icon="toggle down"
-              onClick={(e) => {
-                this.onKeyEvent('down', e, mapStartX, mapStartY);
-              }}
-            />
-            <Button
-              icon="toggle left"
-              onClick={(e) => {
-                this.onKeyEvent('left', e, mapStartX, mapStartY);
-              }}
-            />
-            <Button
-              icon="toggle right"
-              onClick={(e) => {
-                this.onKeyEvent('right', e, mapStartX, mapStartY);
-              }}
-            />
-          </Button.Group>
+            <Grid.Row columns={3}>
+              <Grid.Column></Grid.Column>
+              <Grid.Column>
+                <Button
+                  icon="toggle up"
+                  onClick={(e) => {
+                    this.onKeyEvent('up', e, mapStartX, mapStartY);
+                  }}
+                />
+              </Grid.Column>
+              <Grid.Column></Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={3}>
+              <Grid.Column>
+                <Button
+                  icon="toggle left"
+                  onClick={(e) => {
+                    this.onKeyEvent('left', e, mapStartX, mapStartY);
+                  }}
+                />
+              </Grid.Column>
+              <Grid.Column></Grid.Column>
+              <Grid.Column>
+                <Button
+                  icon="toggle right"
+                  onClick={(e) => {
+                    this.onKeyEvent('right', e, mapStartX, mapStartY);
+                  }}
+                />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={3}>
+              <Grid.Column></Grid.Column>
+              <Grid.Column>
+                <Button
+                  icon="toggle down"
+                  onClick={(e) => {
+                    this.onKeyEvent('down', e, mapStartX, mapStartY);
+                  }}
+                />
+              </Grid.Column>
+              <Grid.Column></Grid.Column>
+            </Grid.Row>
+          </Grid>
         )}
-        {this.props.wsLoading ||
+        {/* {this.props.wsLoading ||
         this.state.imageLoading ||
         this.state.dataLoading < 0 ? (
           <div
@@ -699,7 +703,7 @@ class GameMap extends Component {
           </div>
         ) : (
           ''
-        )}
+        )} */}
       </>
     );
   }
