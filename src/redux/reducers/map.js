@@ -13,15 +13,15 @@ const initState = {
 
 function map(state = initState, action) {
   switch (action.type) {
-    // case actionTypes.MOVE_REQUEST:
-    //   return {
-    //     ...state,
-    //     user: {
-    //       ...state.user,
-    //       x: action.payload.newPosition.x,
-    //       y: action.payload.newPosition.y,
-    //     },
-    //   };
+    case actionTypes.MOVE_REQUEST:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          x: action.payload.newPosition.x,
+          y: action.payload.newPosition.y,
+        },
+      };
     // case actionTypes.MOVE_FAILURE:
     //   return {
     //     ...state,
@@ -33,16 +33,16 @@ function map(state = initState, action) {
     //   };
     case actionTypes.UPDATE_OTHER_PLAYERS:
       // alert(action.payload.username);
-      if (action.payload.username === state.user.username) {
-        return {
-          ...state,
-          user: {
-            ...state.user,
-            x: action.payload.x,
-            y: action.payload.y,
-          },
-        };
-      }
+      // if (action.payload.username === state.user.username) {
+      //   return {
+      //     ...state,
+      //     user: {
+      //       ...state.user,
+      //       x: action.payload.x,
+      //       y: action.payload.y,
+      //     },
+      //   };
+      // }
       return {
         ...state,
         players: state.players.map((player) => {

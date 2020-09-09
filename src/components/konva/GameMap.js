@@ -506,9 +506,9 @@ class GameMap extends Component {
           width={window.innerWidth}
           height={window.innerHeight}
           ref={(stageEl) => (this.stageEl = stageEl)}
-          onClick={(e) => {
-            this.onStageClicked(e, mapStartX, mapStartY);
-          }}
+          // onClick={(e) => {
+          //   this.onStageClicked(e, mapStartX, mapStartY);
+          // }}
         >
           <Layer ref={(layerEl) => (this.backgroundLayer = layerEl)}>
             <Group>
