@@ -8,11 +8,7 @@ const initState = {
     mapEntities: [],
   },
   players: [],
-  user: {
-    username: 'myUser',
-    x: 10,
-    y: 10,
-  },
+  user: {},
 };
 
 function map(state = initState, action) {
@@ -36,6 +32,7 @@ function map(state = initState, action) {
         },
       };
     case actionTypes.UPDATE_OTHER_PLAYERS:
+      console.log(action.payload);
       return {
         ...state,
         players: state.players.map((player) => {

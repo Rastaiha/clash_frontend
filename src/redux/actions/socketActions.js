@@ -3,7 +3,7 @@ import { Client } from '@stomp/stompjs';
 import { SOCKET_URL } from './urls';
 
 let wsClient = null;
-export function initWebsocket({ username, subscriptions = [] }) {
+export function initWebsocket({ username, subscriptions = [], onConnect }) {
   const state = JSON.parse(localStorage.getItem('rastaReactState'));
   if (!state) return;
   const socket = () => new SockJS(SOCKET_URL);
@@ -24,6 +24,7 @@ export function initWebsocket({ username, subscriptions = [] }) {
           subscription.callback(JSON.parse(messageOutput.body));
         });
       });
+      onConnect();
     },
     onDisconnect: () => {
       setTimeout(initWebsocket({ username }), 1000);

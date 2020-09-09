@@ -11,8 +11,9 @@ import {
   getMapData,
   getPlayerStatus,
   getPlayers,
+  movePlayer,
 } from '../../redux/actions/map';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import './style.css';
 
 class GameMap extends Component {
@@ -48,21 +49,41 @@ class GameMap extends Component {
       cellHeight: 100,
       width: widthSize,
       height: heightSize,
+
+      // imageLoading: true,
+      // dataLoading: true,
     };
     this.imageCounter = 0;
     this.onKeyEvent = this.onKeyEvent.bind(this);
   }
 
+  loadedImagesCount = 0;
+  loadedImages = {};
+  preloadImages(imageNames) {
+    imageNames.forEach((name) => {
+      this.loadedImages[name] = new Image();
+      this.loadedImages[name].onload = () => {
+        this.loadedImagesCount++;
+        if (this.loadedImagesCount >= imageNames.length) {
+          this.setState({ imageLoading: false });
+        }
+      };
+      this.loadedImages[name].src = name;
+    });
+  }
+
   componentDidMount() {
+    this.preloadImages([
+      process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png',
+    ]);
     this.props.getPlayerStatus();
     this.props.getMapData();
     this.props.getPlayers({ myUsername: this.props.myUsername });
-    const image = new Image();
-    image.src =
-      process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png';
-    image.onload = () => {
-      this.setState({ soldierImage: image });
-    };
+    this.setState({
+      soldierImage: this.loadedImages[
+        process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png'
+      ],
+    });
 
     const image2 = new Image();
     image2.src =
@@ -73,9 +94,8 @@ class GameMap extends Component {
   }
 
   componentDidUpdate(preProps) {
-
     if (preProps.user !== this.props.user) {
-      console.log("hererererererere")
+      console.log('hererererererere');
     }
 
     if (preProps.players !== this.props.players) {
@@ -192,11 +212,18 @@ class GameMap extends Component {
       this.setState({ direction: key });
 
       if (this.checkNextPosition(nextX, nextY)) {
-
+        this.setState({
+          canMove: false,
+        });
         this.props.movePlayer({
           x: nextX,
-          y: nextY
-        })
+          y: nextY,
+        });
+        setTimeout(() => {
+          this.setState({
+            canMove: true,
+          });
+        }, 100);
 
         // let horizontalCheck = key === 'right' || key === 'down' ? 1 : 0;
         // let verticalCheck = key === 'right' || key === 'down' ? 0 : -1;
@@ -421,20 +448,22 @@ class GameMap extends Component {
   }
 
   onStageClicked(e, startX, startY) {
-    console.log("e:", e)
+    console.log('e:', e);
 
-    let clickedX = (e.target.attrs.x  - this.state.cellWidth / 2) / this.state.cellWidth + startX;
-    let clickedY = (e.target.attrs.y - this.state.cellHeight / 2) / this.state.cellHeight + startY
+    let clickedX =
+      (e.target.attrs.x - this.state.cellWidth / 2) / this.state.cellWidth +
+      startX;
+    let clickedY =
+      (e.target.attrs.y - this.state.cellHeight / 2) / this.state.cellHeight +
+      startY;
 
-    console.log("clickedX:", clickedX);
-    console.log("clickedY:", clickedY)
+    console.log('clickedX:', clickedX);
+    console.log('clickedY:', clickedY);
 
     this.props.movePlayer({
       x: clickedX,
-      y: clickedY
-    })
-
-
+      y: clickedY,
+    });
   }
 
   render() {
@@ -471,9 +500,9 @@ class GameMap extends Component {
           width={window.innerWidth}
           height={window.innerHeight}
           ref={(stageEl) => (this.stageEl = stageEl)}
-          // onClick={(e) => {
-          //   this.onStageClicked(e, mapStartX, mapStartY)
-          // }}
+          onClick={(e) => {
+            this.onStageClicked(e, mapStartX, mapStartY);
+          }}
         >
           <Layer ref={(layerEl) => (this.backgroundLayer = layerEl)}>
             <Group>
@@ -539,7 +568,6 @@ class GameMap extends Component {
                 const distanceFromUser =
                   Math.abs(player.x - this.props.user.x) +
                   Math.abs(player.y - this.props.user.y);
-                console.log("players:", distanceFromUser)
                 return (
                   <>
                     <Player
@@ -641,6 +669,23 @@ class GameMap extends Component {
             />
           </Button.Group>
         )}
+        {this.props.wsLoading ||
+        this.state.imageLoading ||
+        this.state.dataLoading ? (
+          <div
+            style={{
+              width: '100%',
+              height: '100vh',
+              position: 'fixed',
+              background: '#ccc',
+              zIndex: 10000,
+              top: 0,
+              left: 0,
+            }}
+          ></div>
+        ) : (
+          ''
+        )}
       </>
     );
   }
@@ -648,10 +693,16 @@ class GameMap extends Component {
 
 const mapStateToProps = (state) => ({
   myUsername: state.account.username,
+  players: state.map.players,
+  width: state.map.map.width,
+  height: state.map.map.height,
+  mapEntities: state.map.map.mapEntities,
+  user: state.map.user,
 });
 
 export default connect(mapStateToProps, {
   getMapData,
   getPlayerStatus,
   getPlayers,
+  movePlayer,
 })(GameMap);

@@ -31,9 +31,9 @@ export const movePlayer = ({ x, y }) => ({
     url: urls.MOVE,
     fetchOptions: {
       method: 'POST',
-      body: JSON.stringify({ x, y }),
+      body: JSON.stringify({ x: parseInt(x), y: parseInt(y) }),
     },
-    payload: { newPosition: { x, y } },
+    payload: { newPosition: { x: parseInt(x), y: parseInt(y) } },
   },
 });
 

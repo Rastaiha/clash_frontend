@@ -9,6 +9,12 @@ import { connect } from 'react-redux';
 import { teamUrl } from '../redux/actions/urls';
 
 class GameRoute extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+    };
+  }
   componentDidMount() {
     initWebsocket({
       username: this.props.username,
@@ -18,6 +24,9 @@ class GameRoute extends Component {
           callback: (body) => this.props.updatePlayer(body),
         },
       ],
+      onConnect: () => {
+        this.setState({ loading: false });
+      },
     });
   }
   componentWillUnmount() {
@@ -26,9 +35,21 @@ class GameRoute extends Component {
   render() {
     return (
       <>
-        <PrivateRoute path="/game" component={GamePage} />
-        <PrivateRoute path="/battle" component={BattlePage} />
-        <PrivateRoute path="/inventory" component={Inventory} />
+        <PrivateRoute
+          path="/game"
+          component={GamePage}
+          myProps={{ wsLoading: this.state.loading }}
+        />
+        <PrivateRoute
+          path="/battle"
+          component={BattlePage}
+          myProps={{ wsLoading: this.state.loading }}
+        />
+        <PrivateRoute
+          path="/inventory"
+          component={Inventory}
+          myProps={{ wsLoading: this.state.loading }}
+        />
       </>
     );
   }
