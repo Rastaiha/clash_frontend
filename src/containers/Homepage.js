@@ -2,8 +2,9 @@ import React from 'react';
 import { Button, Icon, Header, Container } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar/NavBar';
+import { connect } from 'react-redux';
 
-const Homepage = () => (
+const Homepage = ({ isLoggedIn }) => (
   <div className="no-nav-back padded-nav">
     <NavBar
       config={{
@@ -30,7 +31,7 @@ const Homepage = () => (
         />
         <Button
           as={Link}
-          to="/game/"
+          to={isLoggedIn ? '/game' : '/login'}
           primary
           size="big"
           style={{ textAlign: 'center', margin: '30px 30%', display: 'block' }}
@@ -43,4 +44,8 @@ const Homepage = () => (
   </div>
 );
 
-export default Homepage;
+const mapStateToProps = (state) => ({
+  isLoggedIn: !!state.account.token,
+});
+
+export default connect(mapStateToProps)(Homepage);
