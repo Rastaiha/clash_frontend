@@ -590,6 +590,7 @@ class GameMap extends Component {
                       }
                       buttonsEnabled={distanceFromUser <= 3 ? true : false}
                       username={player.username}
+                      name={player.name}
                       image={this.state.otherPlayersImage}
                       animation={'down'}
                       animations={animations}

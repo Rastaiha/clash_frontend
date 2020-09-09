@@ -60,7 +60,7 @@ class Player extends React.Component {
         y={this.props.y}
         ref={(player) => (this.player = player)}
       >
-        <UsernameBox username={this.props.username} />
+        <UsernameBox username={this.props.name || this.props.username} />
         {this.props.buttonsEnabled && (
           <Button
             x={-30}
