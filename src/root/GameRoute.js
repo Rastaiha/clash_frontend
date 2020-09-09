@@ -15,7 +15,9 @@ class GameRoute extends Component {
       loading: true,
     };
   }
-  componentDidMount() {
+
+  connectToWS() {
+    closeWebsocket();
     initWebsocket({
       username: this.props.username,
       subscriptions: [
@@ -28,6 +30,15 @@ class GameRoute extends Component {
         this.setState({ loading: false });
       },
     });
+    setTimeout(() => {
+      if (this.state.loading) {
+        this.connectToWS();
+      }
+    }, 2000);
+  }
+
+  componentDidMount() {
+    this.connectToWS();
   }
   componentWillUnmount() {
     closeWebsocket();
