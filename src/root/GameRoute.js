@@ -7,6 +7,7 @@ import Inventory from '../containers/Inventory';
 import { updatePlayer } from '../redux/actions/map';
 import { connect } from 'react-redux';
 import { teamUrl } from '../redux/actions/urls';
+import { Switch } from 'react-router';
 
 class GameRoute extends Component {
   constructor(props) {
@@ -45,23 +46,23 @@ class GameRoute extends Component {
   }
   render() {
     return (
-      <>
+      <Switch>
+        <PrivateRoute
+          path="/game/battle"
+          component={BattlePage}
+          myProps={{ wsLoading: this.state.loading }}
+        />
+        <PrivateRoute
+          path="/game/inventory"
+          component={Inventory}
+          myProps={{ wsLoading: this.state.loading }}
+        />
         <PrivateRoute
           path="/game"
           component={GamePage}
           myProps={{ wsLoading: this.state.loading }}
         />
-        <PrivateRoute
-          path="/battle"
-          component={BattlePage}
-          myProps={{ wsLoading: this.state.loading }}
-        />
-        <PrivateRoute
-          path="/inventory"
-          component={Inventory}
-          myProps={{ wsLoading: this.state.loading }}
-        />
-      </>
+      </Switch>
     );
   }
 }
