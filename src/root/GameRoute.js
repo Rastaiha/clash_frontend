@@ -6,7 +6,7 @@ import BattlePage from '../containers/BattlePage';
 import Inventory from '../containers/Inventory';
 import { updatePlayer } from '../redux/actions/map';
 import { connect } from 'react-redux';
-import { teamUrl } from '../redux/actions/urls';
+import { MAP_WEBSOCKET } from '../redux/actions/urls';
 import { Switch } from 'react-router';
 
 class GameRoute extends Component {
@@ -23,7 +23,7 @@ class GameRoute extends Component {
       username: this.props.username,
       subscriptions: [
         {
-          url: teamUrl,
+          url: MAP_WEBSOCKET,
           callback: (body) => this.props.updatePlayer(body),
         },
       ],
