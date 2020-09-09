@@ -43,6 +43,7 @@ body {
   width: 70%;
   margin-right: auto;
   position: relative;
+  height: 250px;
 }
 
 .their-cards-list {
@@ -50,14 +51,19 @@ body {
   width: 70%;
   margin-left: auto;
   position: relative;
+  height: 250px;
 }
 
 .card-item {
+  max-height: 200px;
   width: 20%;
   transform-origin: 50% 200%;
   left: 40%;
+  bottom: 40px;
   margin: 4;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .card-item.our-card {
@@ -69,4 +75,14 @@ body {
   box-shadow: 0 3px 6px rgba(0, 202, 17, 0.8);
   border: 1px solid rgba(0, 202, 17, 1);
   cursor: pointer;
+}
+
+@media (max-width: 500px) {
+  .card-item {
+    max-height: 150px;
+  }
+  .their-cards-list,
+  .our-cards-list {
+    height: 200px;
+  }
 }

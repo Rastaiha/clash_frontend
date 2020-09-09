@@ -4,6 +4,8 @@ import { Container, Grid, Segment, Divider, Label } from 'semantic-ui-react';
 import Card from '../components/battleElements/Card';
 import { newDeck } from '../redux/actions/battle';
 
+import '../statics/styles/battle.css';
+
 function BattlePage({ username, deck, playCard }) {
   const [results, setResults] = useState([]);
   const [opponent, setOpponent] = useState({ username: '' });
@@ -55,37 +57,39 @@ function BattlePage({ username, deck, playCard }) {
                   تایمر
                 </Label>
               </Divider>
-              <div className="our-cards-list">
-                <Card
-                  isOurCards
-                  onClick={() => playCard}
-                  offset={2}
-                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
-                />
-                <Card
-                  isOurCards
-                  onClick={() => playCard}
-                  offset={1}
-                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
-                />
-                <Card
-                  isOurCards
-                  onClick={() => playCard}
-                  offset={0}
-                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
-                />
-                <Card
-                  isOurCards
-                  onClick={() => playCard}
-                  offset={-1}
-                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
-                />
-                <Card
-                  isOurCards
-                  onClick={() => playCard}
-                  offset={-2}
-                  src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
-                />
+              <div>
+                <div className="our-cards-list">
+                  <Card
+                    isOurCards
+                    onClick={() => playCard}
+                    offset={2}
+                    src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                  />
+                  <Card
+                    isOurCards
+                    onClick={() => playCard}
+                    offset={1}
+                    src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                  />
+                  <Card
+                    isOurCards
+                    onClick={() => playCard}
+                    offset={0}
+                    src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                  />
+                  <Card
+                    isOurCards
+                    onClick={() => playCard}
+                    offset={-1}
+                    src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                  />
+                  <Card
+                    isOurCards
+                    onClick={() => playCard}
+                    offset={-2}
+                    src={process.env.PUBLIC_URL + '/images/cards/index.jpeg'}
+                  />
+                </div>
               </div>
             </Segment>
           </Grid.Column>
