@@ -21,6 +21,9 @@ export function initWebsocket({ username, subscriptions = [], onConnect }) {
       wsClient = createdClient;
       subscriptions.forEach((subscription) => {
         wsClient.subscribe(subscription.url, (messageOutput) => {
+          console.log(
+            'ws\nurl: ' + subscription.url + '\nbody: ' + messageOutput.body
+          );
           subscription.callback(JSON.parse(messageOutput.body));
         });
       });
