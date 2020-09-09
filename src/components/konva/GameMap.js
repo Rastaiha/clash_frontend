@@ -50,8 +50,8 @@ class GameMap extends Component {
       width: widthSize,
       height: heightSize,
 
-      // imageLoading: true,
-      // dataLoading: true,
+      imageLoading: true,
+      dataLoading: -3,
     };
     this.imageCounter = 0;
     this.onKeyEvent = this.onKeyEvent.bind(this);
@@ -76,9 +76,15 @@ class GameMap extends Component {
     this.preloadImages([
       process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png',
     ]);
-    this.props.getPlayerStatus();
-    this.props.getMapData();
-    this.props.getPlayers({ myUsername: this.props.myUsername });
+    this.props.getPlayerStatus().then(() => {
+      this.setState({ dataLoading: this.state.dataLoading + 1 });
+    });
+    this.props.getMapData().then(() => {
+      this.setState({ dataLoading: this.state.dataLoading + 1 });
+    });
+    this.props.getPlayers({ myUsername: this.props.myUsername }).then(() => {
+      this.setState({ dataLoading: this.state.dataLoading + 1 });
+    });
     this.setState({
       soldierImage: this.loadedImages[
         process.env.PUBLIC_URL + '/images/sprites/soldiers/soldier5.png'
@@ -671,18 +677,26 @@ class GameMap extends Component {
         )}
         {this.props.wsLoading ||
         this.state.imageLoading ||
-        this.state.dataLoading ? (
+        this.state.dataLoading < 0 ? (
           <div
             style={{
               width: '100%',
               height: '100vh',
               position: 'fixed',
-              background: '#ccc',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'white',
               zIndex: 10000,
               top: 0,
               left: 0,
             }}
-          ></div>
+          >
+            <img
+              src={process.env.PUBLIC_URL + '/images/loading.svg'}
+              style={{ width: '80%', maxWidth: '400px' }}
+            />
+          </div>
         ) : (
           ''
         )}
